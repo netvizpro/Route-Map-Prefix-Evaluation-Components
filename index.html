@@ -1,0 +1,4124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cisco Route-Map & Prefix-List Analyzer Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border-color: #334155;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 20%);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-card-hover);
+            border-radius: 5px;
+            border: 2px solid var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: var(--accent-gradient);
+            filter: blur(100px);
+            opacity: 0.1;
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5em;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.2em;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 40px;
+        }
+
+        /* Security Notice */
+        .security-notice {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #34d399;
+        }
+
+        .security-notice h3 {
+            color: #34d399;
+            margin-bottom: 0;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .security-notice p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .security-icon {
+            font-size: 1.2em;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: var(--bg-card);
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 60px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .upload-section:hover {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.05);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .upload-section h2 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .upload-section input[type="file"] {
+            display: none;
+        }
+
+        .upload-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 30px;
+            background: var(--accent-gradient);
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            font-size: 1.1em;
+        }
+
+        .upload-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 20px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            margin-top: 20px;
+            resize: vertical;
+            transition: all 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 14px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .filter-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .filter-group {
+            flex: 1;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Auto Complete */
+        .auto-complete-wrapper {
+            position: relative;
+        }
+
+        .auto-complete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+            margin-top: 5px;
+            display: none;
+        }
+
+        .auto-complete-list.show {
+            display: block;
+        }
+
+        .auto-complete-item {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s;
+        }
+
+        .auto-complete-item:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .item-name {
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .item-type {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            margin-top: 4px;
+        }
+
+        .item-usage {
+            font-size: 0.8em;
+            margin-top: 4px;
+        }
+
+        .item-usage.unused {
+            color: var(--danger);
+        }
+
+        #searchName {
+            padding-right: 35px;
+        }
+
+        .clear-search {
+            position: absolute;
+            right: 12px;
+            top: 42px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 18px;
+            display: none;
+        }
+
+        .clear-search:hover {
+            color: var(--danger);
+        }
+
+        /* Quick Filters */
+        .quick-filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .expand-collapse-controls {
+            text-align: right;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .expand-collapse-btn {
+            padding: 8px 20px;
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .expand-collapse-btn:hover {
+            background: var(--border-color);
+        }
+
+        /* Results */
+        .results {
+            margin-top: 40px;
+            display: none;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .summary-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+
+        .summary-card h3 {
+            font-size: 3em;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .summary-card p {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Sections & Items */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .section h2 {
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5em;
+        }
+
+        .item {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-primary);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .item:hover {
+            border-color: var(--accent-secondary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .item h3 {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1em;
+            margin-bottom: 0;
+        }
+
+        .collapsible-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .collapse-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+            color: var(--accent-primary);
+        }
+
+        .collapse-icon.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .collapsible-content {
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, opacity 0.4s ease-out;
+            opacity: 1;
+            margin-top: 15px;
+        }
+
+        .collapsible-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        .usage-badge {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .usage-badge.used {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .usage-badge.unused {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* Config Blocks */
+        .config-style-block {
+            background: #0d1117;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', monospace;
+            overflow-x: auto;
+        }
+
+        .config-style-line {
+            padding: 2px 0;
+            color: #e6edf3;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .config-header {
+            color: #79c0ff;
+            font-weight: bold;
+        }
+
+        .config-match {
+            color: #7ee787;
+        }
+
+        .config-set {
+            color: #d2a8ff;
+        }
+
+        .config-comment {
+            color: #8b949e;
+            font-style: italic;
+        }
+
+        .config-exclamation {
+            color: #8b949e;
+        }
+
+        .config-indent-1 {
+            padding-left: 20px;
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .config-indent-2 {
+            padding-left: 40px;
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Applied Locations */
+        .applied-locations {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .applied-locations h4 {
+            color: #34d399;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .applied-locations ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .applied-locations li {
+            background: var(--bg-card);
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .not-used {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        /* Related Items */
+        .related-items {
+            background: rgba(245, 158, 11, 0.05);
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 15px;
+        }
+
+        .related-items h4 {
+            color: var(--warning);
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .related-link {
+            display: inline-block;
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--warning);
+            color: var(--warning);
+            border-radius: 50px;
+            margin: 5px;
+            font-size: 0.85em;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .related-link:hover {
+            background: var(--warning);
+            color: #000;
+        }
+
+        .show-related-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border: 1px solid var(--accent-primary);
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .show-related-btn:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        /* Modal */
+        .related-config-modal {
+            background-color: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .related-config-content {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-lg);
+            color: var(--text-primary);
+        }
+
+        .related-config-header {
+            background: var(--bg-dark);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px;
+        }
+
+        .close-modal {
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+        }
+
+        .related-config-body {
+            padding: 30px;
+            max-height: 70vh;
+            overflow-y: auto;
+            background: var(--bg-card);
+        }
+
+        .copy-config-btn {
+            padding: 10px 20px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .copy-config-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .config-section-header {
+            color: var(--accent-primary);
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .export-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .filter-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cisco IOS/IOS-XE Route-Map & Prefix-List Analyzer</h1>
+            <p>Extract, filter, and analyze routing policies from Cisco configurations</p>
+        </div>
+
+        <div class="main-content">
+            <div class="security-notice">
+                <h3><span class="security-icon">🔒</span> 100% Client-Side Processing</h3>
+                <p>Your network configurations are processed entirely in your browser. No data is uploaded to external
+                    servers, ensuring complete privacy and security of your sensitive network information.</p>
+            </div>
+
+            <div class="upload-section">
+                <h2>Upload Configuration File</h2>
+                <input type="file" id="fileInput" accept=".txt,.cfg,.conf">
+                <label for="fileInput" class="upload-label">📁 Choose Config File</label>
+                <p style="margin-top: 15px; color: var(--text-secondary);">or paste configuration below:</p>
+                <textarea id="configInput" placeholder="Paste your 'show running-config' output here..."></textarea>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="analyzeConfig()">🔎 Analyze Configuration</button>
+                <button class="btn btn-secondary" onclick="clearResults()">🗑️ Clear Results</button>
+            </div>
+
+            <div id="filterSection" class="filter-section">
+                <h3>🔍 Filter and Search</h3>
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label>Filter by Type:</label>
+                        <select id="filterType" onchange="updateSearchOptions()">
+                            <option value="all">Show All</option>
+                            <optgroup label="Routing Policies">
+                                <option value="route-maps">Route-Maps</option>
+                                <option value="prefix-lists">Prefix-Lists</option>
+                                <option value="as-path">AS-Path Lists</option>
+                                <option value="community">Community Lists</option>
+                                <option value="distribute-lists">Distribute-Lists</option>
+                                <option value="filter-lists">Filter-Lists (BGP)</option>
+                            </optgroup>
+                            <optgroup label="Access Control">
+                                <option value="access-lists">Access Lists (ACL)</option>
+                            </optgroup>
+                            <optgroup label="QoS Policies">
+                                <option value="policy-maps">Policy-Maps (QoS)</option>
+                                <option value="class-maps">Class-Maps (QoS)</option>
+                            </optgroup>
+                            <optgroup label="BGP Configuration">
+                                <option value="route-reflectors">Route-Reflectors</option>
+                            </optgroup>
+                            <optgroup label="Static Routing">
+                                <option value="static-routes">Static Routes</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Search Specific Name: <span id="itemCount"
+                                style="color: var(--accent-primary);"></span></label>
+                        <div class="auto-complete-wrapper">
+                            <input type="text" id="searchName" placeholder="Type to search or select from dropdown..."
+                                oninput="handleSearchInput()" onfocus="showAutoComplete()" autocomplete="off">
+                            <span class="clear-search" id="clearSearch" onclick="clearSearchField()">✖</span>
+                            <div id="autoCompleteList" class="auto-complete-list"></div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Filter by Usage:</label>
+                        <select id="filterUsage" onchange="applyFilters()">
+                            <option value="all">All Items</option>
+                            <option value="used">Used Only</option>
+                            <option value="unused">Unused Only</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="quick-filter-buttons">
+                    <button class="filter-btn" onclick="quickFilter('bgp')">BGP Related</button>
+                    <button class="filter-btn" onclick="quickFilter('vrf')">VRF Related</button>
+                    <button class="filter-btn" onclick="quickFilter('reset')">Reset Filters</button>
+                </div>
+            </div>
+
+            <div class="expand-collapse-controls" id="expandCollapseControls">
+                <button class="expand-collapse-btn" onclick="expandAll()">➕ Expand All</button>
+                <button class="expand-collapse-btn" onclick="collapseAll()">➖ Collapse All</button>
+            </div>
+
+            <!-- Complete Related Config Section -->
+            <div id="completeConfigSection" style="display: none; margin-bottom: 30px;">
+                <div class="section" style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success);">
+                    <h2 style="color: var(--success);">📄 Complete Related Configuration</h2>
+                    <p style="margin-bottom: 15px; color: var(--success); font-size: 1.1em;">
+                        Showing all configuration items related to: <strong id="filteredItemName"></strong>
+                    </p>
+                    <div id="completeConfigDisplay" class="config-style-block"
+                        style="max-height: 600px; overflow-y: auto;"></div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button class="copy-config-btn" onclick="copyCompleteConfig()">📋 Copy Complete Config to
+                            Clipboard</button>
+                        <button class="btn btn-secondary" style="margin-left: 10px;" onclick="hideCompleteConfig()">✖️
+                            Hide Complete Config</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="results" class="results">
+                <div class="summary-cards" id="summaryCards"></div>
+                <div id="routeMapsSection"></div>
+                <div id="prefixListsSection"></div>
+                <div id="asPathListsSection"></div>
+                <div id="communityListsSection"></div>
+                <div id="accessListsSection"></div>
+                <div id="distributeListsSection"></div>
+                <div id="filterListsSection"></div>
+                <div id="policyMapsSection"></div>
+                <div id="classMapsSection"></div>
+                <div id="routeReflectorsSection"></div>
+                <div id="staticRoutesSection"></div>
+
+                <div class="export-section">
+                    <button class="btn btn-primary" onclick="exportReport()">📥 Export Full Report</button>
+                </div>
+            </div>
+
+            <!-- Related Config Modal -->
+            <div id="relatedConfigModal" class="related-config-modal">
+                <div class="related-config-content">
+                    <div class="related-config-header">
+                        <h2 id="modalTitle">Complete Related Configuration</h2>
+                        <span class="close-modal" onclick="closeRelatedModal()">&times;</span>
+                    </div>
+                    <div class="related-config-body">
+                        <div id="relatedConfigDisplay"></div>
+                        <button class="copy-config-btn" onclick="copyRelatedConfig()">📋 Copy to Clipboard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let analysisData = {};
+        let currentFilters = {
+            type: 'all',
+            name: '',
+            usage: 'all',
+            quick: ''
+        };
+
+        document.getElementById('fileInput').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('configInput').value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function analyzeConfig() {
+            const config = document.getElementById('configInput').value;
+
+            if (!config.trim()) {
+                alert('Please upload a configuration file or paste configuration text.');
+                return;
+            }
+
+            analysisData = {
+                routeMaps: extractRouteMaps(config),
+                prefixLists: extractPrefixLists(config),
+                asPathLists: extractAsPathLists(config),
+                communityLists: extractCommunityLists(config),
+                extCommunityLists: extractExtCommunityLists(config),
+                accessLists: extractAccessLists(config),
+                distributeLists: extractDistributeLists(config),
+                filterLists: extractFilterLists(config),
+                policyMaps: extractPolicyMaps(config),
+                classMaps: extractClassMaps(config),
+                routeReflectors: extractRouteReflectors(config),
+                staticRoutes: extractStaticRoutes(config),
+                applications: findApplications(config),
+                vrfImports: findVRFImports(config)
+            };
+
+            // Build relationships
+            buildRelationships();
+
+            displayResults();
+            document.getElementById('filterSection').style.display = 'block';
+            document.getElementById('expandCollapseControls').style.display = 'block';
+        }
+
+        function extractRouteMaps(config) {
+            const routeMaps = {};
+            const lines = config.split('\n');
+            let currentRouteMap = null;
+            let currentSeq = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+
+                const rmMatch = line.match(/^route-map\s+(\S+)\s+(permit|deny)\s+(\d+)/);
+                if (rmMatch) {
+                    const [, name, action, seq] = rmMatch;
+                    if (!routeMaps[name]) {
+                        routeMaps[name] = { sequences: [], relatedItems: [] };
+                    }
+                    currentRouteMap = name;
+                    currentSeq = {
+                        sequence: seq,
+                        action: action,
+                        matches: [],
+                        sets: []
+                    };
+                    routeMaps[name].sequences.push(currentSeq);
+                }
+                else if (currentSeq && line.startsWith('match ')) {
+                    currentSeq.matches.push(line);
+                }
+                else if (currentSeq && line.startsWith('set ')) {
+                    currentSeq.sets.push(line);
+                }
+                else if (currentSeq && line && !line.startsWith(' ') && !line.startsWith('route-map')) {
+                    currentRouteMap = null;
+                    currentSeq = null;
+                }
+            }
+
+            return routeMaps;
+        }
+
+        function extractPrefixLists(config) {
+            const prefixLists = {};
+            const lines = config.split('\n');
+
+            for (const line of lines) {
+                const match = line.trim().match(/^ip\s+prefix-list\s+(\S+)\s+seq\s+(\d+)\s+(permit|deny)\s+(.+)/);
+                if (match) {
+                    const [, name, seq, action, prefix] = match;
+                    if (!prefixLists[name]) {
+                        prefixLists[name] = { entries: [], relatedItems: [] };
+                    }
+                    prefixLists[name].entries.push({
+                        sequence: seq,
+                        action: action,
+                        prefix: prefix
+                    });
+                }
+            }
+
+            return prefixLists;
+        }
+
+        function extractAsPathLists(config) {
+            const asPathLists = {};
+            const lines = config.split('\n');
+
+            for (const line of lines) {
+                const match = line.trim().match(/^ip\s+as-path\s+access-list\s+(\S+)\s+(permit|deny)\s+(.+)/);
+                if (match) {
+                    const [, name, action, regex] = match;
+                    if (!asPathLists[name]) {
+                        asPathLists[name] = { entries: [], relatedItems: [] };
+                    }
+                    asPathLists[name].entries.push({
+                        action: action,
+                        regex: regex
+                    });
+                }
+            }
+
+            return asPathLists;
+        }
+
+        function extractCommunityLists(config) {
+            const communityLists = {};
+            const lines = config.split('\n');
+
+            for (const line of lines) {
+                const match = line.trim().match(/^ip\s+community-list\s+(standard|expanded|\d+)\s+(\S+)\s+(permit|deny)\s+(.+)/);
+                if (match) {
+                    const [, type, name, action, community] = match;
+                    if (!communityLists[name]) {
+                        communityLists[name] = { type: type, entries: [], relatedItems: [] };
+                    }
+                    communityLists[name].entries.push({
+                        action: action,
+                        community: community
+                    });
+                }
+            }
+
+            return communityLists;
+        }
+
+        function extractExtCommunityLists(config) {
+            const extCommunityLists = {};
+            const lines = config.split('\n');
+
+            for (const line of lines) {
+                const match = line.trim().match(/^ip\s+extcommunity-list\s+(standard|expanded)\s+(\S+)\s+(permit|deny)\s+(.+)/);
+                if (match) {
+                    const [, type, name, action, community] = match;
+                    if (!extCommunityLists[name]) {
+                        extCommunityLists[name] = { type: type, entries: [], relatedItems: [] };
+                    }
+                    extCommunityLists[name].entries.push({
+                        action: action,
+                        community: community
+                    });
+                }
+            }
+
+            return extCommunityLists;
+        }
+
+        function extractAccessLists(config) {
+            const accessLists = {};
+            const lines = config.split('\n');
+            let currentACL = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+
+                // Standard and Extended ACLs
+                const aclMatch = line.match(/^(ip\s+)?access-list\s+(\S+)\s+(permit|deny)\s+(.+)/);
+                if (aclMatch) {
+                    const [, , name, action, criteria] = aclMatch;
+                    if (!accessLists[name]) {
+                        accessLists[name] = { type: 'numbered', entries: [], relatedItems: [] };
+                    }
+                    accessLists[name].entries.push({
+                        action: action,
+                        criteria: criteria
+                    });
+                }
+
+                // Named ACLs
+                const namedMatch = line.match(/^ip\s+access-list\s+(standard|extended)\s+(\S+)/);
+                if (namedMatch) {
+                    const [, type, name] = namedMatch;
+                    currentACL = name;
+                    if (!accessLists[name]) {
+                        accessLists[name] = { type: type, entries: [], relatedItems: [] };
+                    }
+                }
+
+                if (currentACL && (line.startsWith('permit ') || line.startsWith('deny '))) {
+                    const parts = line.split(/\s+/);
+                    accessLists[currentACL].entries.push({
+                        action: parts[0],
+                        criteria: parts.slice(1).join(' ')
+                    });
+                }
+
+                if (line && !line.startsWith(' ') && !line.startsWith('ip access-list')) {
+                    currentACL = null;
+                }
+            }
+
+            return accessLists;
+        }
+
+        function extractDistributeLists(config) {
+            const distributeLists = {};
+            const lines = config.split('\n');
+
+            for (const line of lines) {
+                // distribute-list with ACL
+                let match = line.trim().match(/distribute-list\s+(\S+)\s+(in|out)(?:\s+(\S+))?/);
+                if (match && !match[0].includes('prefix')) {
+                    const [, name, direction, interface_area] = match;
+                    if (!distributeLists[name]) {
+                        distributeLists[name] = { type: 'ACL', applications: [], relatedItems: [] };
+                    }
+                    distributeLists[name].applications.push({
+                        direction: direction,
+                        context: interface_area || 'global'
+                    });
+                }
+            }
+
+            return distributeLists;
+        }
+
+        function extractFilterLists(config) {
+            const filterLists = {};
+            const lines = config.split('\n');
+
+            for (const line of lines) {
+                const match = line.trim().match(/neighbor\s+(\S+)\s+filter-list\s+(\S+)\s+(in|out)/);
+                if (match) {
+                    const [, neighbor, name, direction] = match;
+                    if (!filterLists[name]) {
+                        filterLists[name] = { applications: [], relatedItems: [] };
+                    }
+                    filterLists[name].applications.push({
+                        neighbor: neighbor,
+                        direction: direction
+                    });
+                }
+            }
+
+            return filterLists;
+        }
+
+        function extractPolicyMaps(config) {
+            const policyMaps = {};
+            const lines = config.split('\n');
+            let currentPolicy = null;
+            let currentClass = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+
+                const policyMatch = line.match(/^policy-map\s+(\S+)/);
+                if (policyMatch) {
+                    const name = policyMatch[1];
+                    currentPolicy = name;
+                    if (!policyMaps[name]) {
+                        policyMaps[name] = { classes: [], relatedItems: [] };
+                    }
+                }
+
+                if (currentPolicy && line.startsWith('class ')) {
+                    const classMatch = line.match(/class\s+(\S+)/);
+                    if (classMatch) {
+                        currentClass = {
+                            name: classMatch[1],
+                            actions: []
+                        };
+                        policyMaps[currentPolicy].classes.push(currentClass);
+                    }
+                }
+
+                if (currentClass && line.startsWith('  ') && !line.startsWith('class')) {
+                    currentClass.actions.push(line.trim());
+                }
+
+                if (line && !line.startsWith(' ') && !line.startsWith('policy-map')) {
+                    currentPolicy = null;
+                    currentClass = null;
+                }
+            }
+
+            return policyMaps;
+        }
+
+        function extractClassMaps(config) {
+            const classMaps = {};
+            const lines = config.split('\n');
+            let currentClass = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+
+                const classMatch = line.match(/^class-map\s+(?:match-any|match-all)?\s*(\S+)/);
+                if (classMatch) {
+                    const name = classMatch[1];
+                    currentClass = name;
+                    if (!classMaps[name]) {
+                        classMaps[name] = { matches: [], relatedItems: [] };
+                    }
+                }
+
+                if (currentClass && line.startsWith('match ')) {
+                    classMaps[currentClass].matches.push(line);
+                }
+
+                if (line && !line.startsWith(' ') && !line.startsWith('class-map')) {
+                    currentClass = null;
+                }
+            }
+
+            return classMaps;
+        }
+
+        function extractRouteReflectors(config) {
+            const routeReflectors = {};
+            const lines = config.split('\n');
+
+            for (const line of lines) {
+                const match = line.trim().match(/neighbor\s+(\S+)\s+route-reflector-client/);
+                if (match) {
+                    const neighbor = match[1];
+                    if (!routeReflectors[neighbor]) {
+                        routeReflectors[neighbor] = { config: [], relatedItems: [] };
+                    }
+                    routeReflectors[neighbor].config.push(line.trim());
+                }
+            }
+
+            return routeReflectors;
+        }
+
+        function extractStaticRoutes(config) {
+            const staticRoutes = {};
+            const lines = config.split('\n');
+            let routeIndex = 0;
+
+            for (const line of lines) {
+                const match = line.trim().match(/^ip\s+route\s+(\S+)\s+(\S+)\s+(.+)/);
+                if (match) {
+                    const [, network, mask, nexthop] = match;
+                    const routeName = `${network}_${mask}`;
+                    if (!staticRoutes[routeName]) {
+                        staticRoutes[routeName] = {
+                            network: network,
+                            mask: mask,
+                            nexthop: nexthop.split(/\s+/)[0],
+                            entries: [],
+                            relatedItems: []
+                        };
+                    }
+                    staticRoutes[routeName].entries.push(line.trim());
+                }
+            }
+
+            return staticRoutes;
+        }
+
+        function extractPrefixLists(config) {
+            const prefixLists = {};
+            const lines = config.split('\n');
+
+            for (const line of lines) {
+                const match = line.trim().match(/^ip\s+prefix-list\s+(\S+)\s+seq\s+(\d+)\s+(permit|deny)\s+(.+)/);
+                if (match) {
+                    const [, name, seq, action, prefix] = match;
+                    if (!prefixLists[name]) {
+                        prefixLists[name] = { entries: [], relatedItems: [] };
+                    }
+                    prefixLists[name].entries.push({
+                        sequence: seq,
+                        action: action,
+                        prefix: prefix
+                    });
+                }
+            }
+
+            return prefixLists;
+        }
+
+        function extractAsPathLists(config) {
+            const asPathLists = {};
+            const lines = config.split('\n');
+
+            for (const line of lines) {
+                const match = line.trim().match(/^ip\s+as-path\s+access-list\s+(\S+)\s+(permit|deny)\s+(.+)/);
+                if (match) {
+                    const [, name, action, regex] = match;
+                    if (!asPathLists[name]) {
+                        asPathLists[name] = { entries: [], relatedItems: [] };
+                    }
+                    asPathLists[name].entries.push({
+                        action: action,
+                        regex: regex
+                    });
+                }
+            }
+
+            return asPathLists;
+        }
+
+        function extractCommunityLists(config) {
+            const communityLists = {};
+            const lines = config.split('\n');
+
+            for (const line of lines) {
+                const match = line.trim().match(/^ip\s+community-list\s+(standard|expanded|\d+)\s+(\S+)\s+(permit|deny)\s+(.+)/);
+                if (match) {
+                    const [, type, name, action, community] = match;
+                    if (!communityLists[name]) {
+                        communityLists[name] = { type: type, entries: [], relatedItems: [] };
+                    }
+                    communityLists[name].entries.push({
+                        action: action,
+                        community: community
+                    });
+                }
+            }
+
+            return communityLists;
+        }
+
+        function extractExtCommunityLists(config) {
+            const extCommunityLists = {};
+            const lines = config.split('\n');
+
+            for (const line of lines) {
+                const match = line.trim().match(/^ip\s+extcommunity-list\s+(standard|expanded)\s+(\S+)\s+(permit|deny)\s+(.+)/);
+                if (match) {
+                    const [, type, name, action, community] = match;
+                    if (!extCommunityLists[name]) {
+                        extCommunityLists[name] = { type: type, entries: [], relatedItems: [] };
+                    }
+                    extCommunityLists[name].entries.push({
+                        action: action,
+                        community: community
+                    });
+                }
+            }
+
+            return extCommunityLists;
+        }
+
+        function findVRFImports(config) {
+            const vrfImports = {};
+            const lines = config.split('\n');
+            let currentVrf = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+
+                const vrfMatch = line.match(/^ip\s+vrf\s+(\S+)/);
+                if (vrfMatch) {
+                    currentVrf = vrfMatch[1];
+                    vrfImports[currentVrf] = null;
+                }
+
+                if (currentVrf) {
+                    const importMatch = line.match(/^import\s+map\s+(\S+)/);
+                    if (importMatch) {
+                        vrfImports[currentVrf] = importMatch[1];
+                    }
+                }
+
+                if (line && !line.startsWith(' ') && !line.startsWith('ip vrf')) {
+                    currentVrf = null;
+                }
+            }
+
+            return vrfImports;
+        }
+
+        function findApplications(config) {
+            const applications = {
+                routeMaps: {},
+                prefixLists: {},
+                asPathLists: {},
+                communityLists: {},
+                extCommunityLists: {},
+                accessLists: {},
+                policyMaps: {},
+                classMaps: {}
+            };
+
+            const lines = config.split('\n');
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+
+                // ========== ROUTE-MAP APPLICATIONS ==========
+
+                // BGP neighbor route-map (multiple patterns)
+                let match = line.match(/neighbor\s+(\S+)\s+route-map\s+(\S+)\s+(in|out)/);
+                if (match) {
+                    const [, neighbor, rmName, direction] = match;
+                    if (!applications.routeMaps[rmName]) {
+                        applications.routeMaps[rmName] = [];
+                    }
+                    applications.routeMaps[rmName].push({
+                        type: 'BGP Neighbor',
+                        location: `neighbor ${neighbor} route-map ${rmName} ${direction}`
+                    });
+                }
+
+                // BGP redistribute route-map
+                match = line.match(/redistribute\s+(\S+).*route-map\s+(\S+)/);
+                if (match) {
+                    const [, protocol, rmName] = match;
+                    if (!applications.routeMaps[rmName]) {
+                        applications.routeMaps[rmName] = [];
+                    }
+                    applications.routeMaps[rmName].push({
+                        type: 'BGP Redistribute',
+                        location: `redistribute ${protocol} route-map ${rmName}`
+                    });
+                }
+
+                // VRF import map
+                match = line.match(/import\s+map\s+(\S+)/);
+                if (match) {
+                    const rmName = match[1];
+                    for (let j = i - 1; j >= 0 && j >= i - 20; j--) {
+                        const vrfMatch = lines[j].trim().match(/^ip\s+vrf\s+(\S+)/);
+                        if (vrfMatch) {
+                            if (!applications.routeMaps[rmName]) {
+                                applications.routeMaps[rmName] = [];
+                            }
+                            applications.routeMaps[rmName].push({
+                                type: 'VRF Import',
+                                location: `ip vrf ${vrfMatch[1]} - import map ${rmName}`
+                            });
+                            break;
+                        }
+                    }
+                }
+
+                // VRF export map
+                match = line.match(/export\s+map\s+(\S+)/);
+                if (match) {
+                    const rmName = match[1];
+                    for (let j = i - 1; j >= 0 && j >= i - 20; j--) {
+                        const vrfMatch = lines[j].trim().match(/^ip\s+vrf\s+(\S+)/);
+                        if (vrfMatch) {
+                            if (!applications.routeMaps[rmName]) {
+                                applications.routeMaps[rmName] = [];
+                            }
+                            applications.routeMaps[rmName].push({
+                                type: 'VRF Export',
+                                location: `ip vrf ${vrfMatch[1]} - export map ${rmName}`
+                            });
+                            break;
+                        }
+                    }
+                }
+
+                // Interface policy route-map
+                match = line.match(/ip\s+policy\s+route-map\s+(\S+)/);
+                if (match) {
+                    const rmName = match[1];
+                    for (let j = i - 1; j >= 0 && j >= i - 10; j--) {
+                        const ifMatch = lines[j].trim().match(/^interface\s+(\S+)/);
+                        if (ifMatch) {
+                            if (!applications.routeMaps[rmName]) {
+                                applications.routeMaps[rmName] = [];
+                            }
+                            applications.routeMaps[rmName].push({
+                                type: 'Interface Policy',
+                                location: `interface ${ifMatch[1]} - ip policy route-map ${rmName}`
+                            });
+                            break;
+                        }
+                    }
+                }
+
+                // BGP network route-map
+                match = line.match(/network\s+\S+.*route-map\s+(\S+)/);
+                if (match) {
+                    const rmName = match[1];
+                    if (!applications.routeMaps[rmName]) {
+                        applications.routeMaps[rmName] = [];
+                    }
+                    applications.routeMaps[rmName].push({
+                        type: 'BGP Network',
+                        location: `network route-map ${rmName}`
+                    });
+                }
+
+                // BGP aggregate route-map
+                match = line.match(/aggregate-address\s+\S+.*route-map\s+(\S+)/);
+                if (match) {
+                    const rmName = match[1];
+                    if (!applications.routeMaps[rmName]) {
+                        applications.routeMaps[rmName] = [];
+                    }
+                    applications.routeMaps[rmName].push({
+                        type: 'BGP Aggregate',
+                        location: `aggregate-address route-map ${rmName}`
+                    });
+                }
+
+                // ========== PREFIX-LIST APPLICATIONS ==========
+
+                // Match prefix-list in route-map
+                match = line.match(/match\s+ip\s+address\s+prefix-list\s+(\S+)/);
+                if (match) {
+                    const plName = match[1];
+                    if (!applications.prefixLists[plName]) {
+                        applications.prefixLists[plName] = [];
+                    }
+                    for (let j = i - 1; j >= 0 && j >= i - 30; j--) {
+                        const rmMatch = lines[j].trim().match(/^route-map\s+(\S+)\s+(permit|deny)\s+(\d+)/);
+                        if (rmMatch) {
+                            const rmName = rmMatch[1];
+                            const alreadyAdded = applications.prefixLists[plName].some(app =>
+                                app.location.includes(`route-map ${rmName}`)
+                            );
+                            if (!alreadyAdded) {
+                                applications.prefixLists[plName].push({
+                                    type: 'Route-Map Match',
+                                    location: `route-map ${rmName}`
+                                });
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // BGP neighbor prefix-list (DIRECT APPLICATION - THIS WAS MISSING!)
+                match = line.match(/neighbor\s+(\S+)\s+prefix-list\s+(\S+)\s+(in|out)/);
+                if (match) {
+                    const [, neighbor, plName, direction] = match;
+                    if (!applications.prefixLists[plName]) {
+                        applications.prefixLists[plName] = [];
+                    }
+                    applications.prefixLists[plName].push({
+                        type: 'BGP Neighbor',
+                        location: `neighbor ${neighbor} prefix-list ${plName} ${direction}`
+                    });
+                }
+
+                // Distribute-list with prefix-list
+                match = line.match(/distribute-list\s+prefix\s+(\S+)\s+(in|out)(?:\s+(\S+))?/);
+                if (match) {
+                    const [, plName, direction, interface_area] = match;
+                    if (!applications.prefixLists[plName]) {
+                        applications.prefixLists[plName] = [];
+                    }
+                    applications.prefixLists[plName].push({
+                        type: 'Distribute-List',
+                        location: `distribute-list prefix ${plName} ${direction}${interface_area ? ' ' + interface_area : ''}`
+                    });
+                }
+
+                // Area filter-list (OSPF)
+                match = line.match(/area\s+(\S+)\s+filter-list\s+prefix\s+(\S+)\s+(in|out)/);
+                if (match) {
+                    const [, area, plName, direction] = match;
+                    if (!applications.prefixLists[plName]) {
+                        applications.prefixLists[plName] = [];
+                    }
+                    applications.prefixLists[plName].push({
+                        type: 'OSPF Area Filter',
+                        location: `area ${area} filter-list prefix ${plName} ${direction}`
+                    });
+                }
+
+                // ========== AS-PATH LIST APPLICATIONS ==========
+
+                // Match as-path in route-map
+                match = line.match(/match\s+as-path\s+(\S+)/);
+                if (match) {
+                    const asName = match[1];
+                    if (!applications.asPathLists[asName]) {
+                        applications.asPathLists[asName] = [];
+                    }
+                    for (let j = i - 1; j >= 0 && j >= i - 30; j--) {
+                        const rmMatch = lines[j].trim().match(/^route-map\s+(\S+)\s+(permit|deny)\s+(\d+)/);
+                        if (rmMatch) {
+                            const rmName = rmMatch[1];
+                            const alreadyAdded = applications.asPathLists[asName].some(app =>
+                                app.location.includes(`route-map ${rmName}`)
+                            );
+                            if (!alreadyAdded) {
+                                applications.asPathLists[asName].push({
+                                    type: 'Route-Map Match',
+                                    location: `route-map ${rmName}`
+                                });
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // BGP neighbor filter-list (DIRECT AS-PATH APPLICATION)
+                match = line.match(/neighbor\s+(\S+)\s+filter-list\s+(\S+)\s+(in|out)/);
+                if (match) {
+                    const [, neighbor, asName, direction] = match;
+                    if (!applications.asPathLists[asName]) {
+                        applications.asPathLists[asName] = [];
+                    }
+                    applications.asPathLists[asName].push({
+                        type: 'BGP Neighbor Filter',
+                        location: `neighbor ${neighbor} filter-list ${asName} ${direction}`
+                    });
+                }
+
+                // ========== COMMUNITY LIST APPLICATIONS ==========
+
+                // Match community in route-map
+                match = line.match(/match\s+community\s+(\S+)/);
+                if (match) {
+                    const commName = match[1];
+                    if (!applications.communityLists[commName]) {
+                        applications.communityLists[commName] = [];
+                    }
+                    for (let j = i - 1; j >= 0 && j >= i - 30; j--) {
+                        const rmMatch = lines[j].trim().match(/^route-map\s+(\S+)\s+(permit|deny)\s+(\d+)/);
+                        if (rmMatch) {
+                            const rmName = rmMatch[1];
+                            const alreadyAdded = applications.communityLists[commName].some(app =>
+                                app.location.includes(`route-map ${rmName}`) && app.type === 'Route-Map Match'
+                            );
+                            if (!alreadyAdded) {
+                                applications.communityLists[commName].push({
+                                    type: 'Route-Map Match',
+                                    location: `route-map ${rmName}`
+                                });
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // Match extcommunity in route-map
+                match = line.match(/match\s+extcommunity\s+(\S+)/);
+                if (match) {
+                    const extCommName = match[1];
+                    if (!applications.extCommunityLists[extCommName]) {
+                        applications.extCommunityLists[extCommName] = [];
+                    }
+                    for (let j = i - 1; j >= 0 && j >= i - 30; j--) {
+                        const rmMatch = lines[j].trim().match(/^route-map\s+(\S+)\s+(permit|deny)\s+(\d+)/);
+                        if (rmMatch) {
+                            const rmName = rmMatch[1];
+                            const alreadyAdded = applications.extCommunityLists[extCommName].some(app =>
+                                app.location.includes(`route-map ${rmName}`) && app.type === 'Route-Map Match'
+                            );
+                            if (!alreadyAdded) {
+                                applications.extCommunityLists[extCommName].push({
+                                    type: 'Route-Map Match',
+                                    location: `route-map ${rmName}`
+                                });
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // Set community using community-list
+                match = line.match(/set\s+community\s+(\S+)/);
+                if (match) {
+                    const commName = match[1];
+                    if (commName !== 'none' && commName !== 'additive' && !/^\d+:\d+$/.test(commName)) {
+                        if (!applications.communityLists[commName]) {
+                            applications.communityLists[commName] = [];
+                        }
+                        for (let j = i - 1; j >= 0 && j >= i - 30; j--) {
+                            const rmMatch = lines[j].trim().match(/^route-map\s+(\S+)\s+(permit|deny)\s+(\d+)/);
+                            if (rmMatch) {
+                                const rmName = rmMatch[1];
+                                const alreadyAdded = applications.communityLists[commName].some(app =>
+                                    app.location.includes(`route-map ${rmName}`) && app.type === 'Route-Map Set'
+                                );
+                                if (!alreadyAdded) {
+                                    applications.communityLists[commName].push({
+                                        type: 'Route-Map Set',
+                                        location: `route-map ${rmName}`
+                                    });
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Set extcommunity
+                match = line.match(/set\s+extcommunity\s+(\S+)/);
+                if (match) {
+                    const extCommName = match[1];
+                    if (!applications.extCommunityLists[extCommName]) {
+                        applications.extCommunityLists[extCommName] = [];
+                    }
+                    for (let j = i - 1; j >= 0 && j >= i - 30; j--) {
+                        const rmMatch = lines[j].trim().match(/^route-map\s+(\S+)\s+(permit|deny)\s+(\d+)/);
+                        if (rmMatch) {
+                            const rmName = rmMatch[1];
+                            const alreadyAdded = applications.extCommunityLists[extCommName].some(app =>
+                                app.location.includes(`route-map ${rmName}`) && app.type === 'Route-Map Set'
+                            );
+                            if (!alreadyAdded) {
+                                applications.extCommunityLists[extCommName].push({
+                                    type: 'Route-Map Set',
+                                    location: `route-map ${rmName}`
+                                });
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // ========== ACCESS-LIST APPLICATIONS ==========
+
+                // Interface access-group
+                match = line.match(/ip\s+access-group\s+(\S+)\s+(in|out)/);
+                if (match) {
+                    const [, aclName, direction] = match;
+                    for (let j = i - 1; j >= 0 && j >= i - 10; j--) {
+                        const ifMatch = lines[j].trim().match(/^interface\s+(\S+)/);
+                        if (ifMatch) {
+                            if (!applications.accessLists[aclName]) {
+                                applications.accessLists[aclName] = [];
+                            }
+                            applications.accessLists[aclName].push({
+                                type: 'Interface ACL',
+                                location: `interface ${ifMatch[1]} - ip access-group ${aclName} ${direction}`
+                            });
+                            break;
+                        }
+                    }
+                }
+
+                // Line VTY access-class
+                match = line.match(/access-class\s+(\S+)\s+(in|out)/);
+                if (match) {
+                    const [, aclName, direction] = match;
+                    if (!applications.accessLists[aclName]) {
+                        applications.accessLists[aclName] = [];
+                    }
+                    applications.accessLists[aclName].push({
+                        type: 'VTY Access',
+                        location: `line vty - access-class ${aclName} ${direction}`
+                    });
+                }
+
+                // Distribute-list with ACL
+                match = line.match(/distribute-list\s+(\d+)\s+(in|out)(?:\s+(\S+))?/);
+                if (match && !line.includes('prefix')) {
+                    const [, aclName, direction, interface_area] = match;
+                    if (!applications.accessLists[aclName]) {
+                        applications.accessLists[aclName] = [];
+                    }
+                    applications.accessLists[aclName].push({
+                        type: 'Distribute-List',
+                        location: `distribute-list ${aclName} ${direction}${interface_area ? ' ' + interface_area : ''}`
+                    });
+                }
+
+                // Match ip address (ACL in route-map)
+                match = line.match(/match\s+ip\s+address\s+(\d+)/);
+                if (match) {
+                    const aclName = match[1];
+                    if (!applications.accessLists[aclName]) {
+                        applications.accessLists[aclName] = [];
+                    }
+                    for (let j = i - 1; j >= 0 && j >= i - 30; j--) {
+                        const rmMatch = lines[j].trim().match(/^route-map\s+(\S+)/);
+                        if (rmMatch) {
+                            applications.accessLists[aclName].push({
+                                type: 'Route-Map Match',
+                                location: `route-map ${rmMatch[1]}`
+                            });
+                            break;
+                        }
+                    }
+                }
+
+                // ========== POLICY-MAP APPLICATIONS ==========
+
+                // Service-policy (interface)
+                match = line.match(/service-policy\s+(input|output)\s+(\S+)/);
+                if (match) {
+                    const [, direction, policyName] = match;
+                    for (let j = i - 1; j >= 0 && j >= i - 10; j--) {
+                        const ifMatch = lines[j].trim().match(/^interface\s+(\S+)/);
+                        if (ifMatch) {
+                            if (!applications.policyMaps[policyName]) {
+                                applications.policyMaps[policyName] = [];
+                            }
+                            applications.policyMaps[policyName].push({
+                                type: 'Interface QoS',
+                                location: `interface ${ifMatch[1]} - service-policy ${direction} ${policyName}`
+                            });
+                            break;
+                        }
+                    }
+                }
+
+                // ========== CLASS-MAP APPLICATIONS ==========
+
+                // Class used in policy-map
+                match = line.match(/^\s+class\s+(\S+)/);
+                if (match) {
+                    const className = match[1];
+                    for (let j = i - 1; j >= 0 && j >= i - 30; j--) {
+                        const pmMatch = lines[j].trim().match(/^policy-map\s+(\S+)/);
+                        if (pmMatch) {
+                            if (!applications.classMaps[className]) {
+                                applications.classMaps[className] = [];
+                            }
+                            const alreadyAdded = applications.classMaps[className].some(app =>
+                                app.location.includes(`policy-map ${pmMatch[1]}`)
+                            );
+                            if (!alreadyAdded) {
+                                applications.classMaps[className].push({
+                                    type: 'Policy-Map',
+                                    location: `policy-map ${pmMatch[1]}`
+                                });
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return applications;
+        }
+
+        function buildRelationships() {
+            // Build relationships between route-maps and prefix-lists, community-lists, etc.
+            for (const [rmName, rmData] of Object.entries(analysisData.routeMaps)) {
+                for (const seq of rmData.sequences) {
+                    // Check for prefix-lists
+                    for (const match of seq.matches) {
+                        const plMatch = match.match(/match\s+ip\s+address\s+prefix-list\s+(\S+)/);
+                        if (plMatch && analysisData.prefixLists[plMatch[1]]) {
+                            if (!rmData.relatedItems.includes(`prefix-list:${plMatch[1]}`)) {
+                                rmData.relatedItems.push(`prefix-list:${plMatch[1]}`);
+                            }
+                            if (!analysisData.prefixLists[plMatch[1]].relatedItems.includes(`route-map:${rmName}`)) {
+                                analysisData.prefixLists[plMatch[1]].relatedItems.push(`route-map:${rmName}`);
+                            }
+                        }
+
+                        // Check for community-lists
+                        const commMatch = match.match(/match\s+community\s+(\S+)/);
+                        if (commMatch && analysisData.communityLists[commMatch[1]]) {
+                            if (!rmData.relatedItems.includes(`community-list:${commMatch[1]}`)) {
+                                rmData.relatedItems.push(`community-list:${commMatch[1]}`);
+                            }
+                            if (!analysisData.communityLists[commMatch[1]].relatedItems.includes(`route-map:${rmName}`)) {
+                                analysisData.communityLists[commMatch[1]].relatedItems.push(`route-map:${rmName}`);
+                            }
+                        }
+
+                        // Check for extcommunity-lists
+                        const extCommMatch = match.match(/match\s+extcommunity\s+(\S+)/);
+                        if (extCommMatch && analysisData.extCommunityLists[extCommMatch[1]]) {
+                            if (!rmData.relatedItems.includes(`extcommunity-list:${extCommMatch[1]}`)) {
+                                rmData.relatedItems.push(`extcommunity-list:${extCommMatch[1]}`);
+                            }
+                            if (!analysisData.extCommunityLists[extCommMatch[1]].relatedItems.includes(`route-map:${rmName}`)) {
+                                analysisData.extCommunityLists[extCommMatch[1]].relatedItems.push(`route-map:${rmName}`);
+                            }
+                        }
+
+                        // Check for as-path lists
+                        const asMatch = match.match(/match\s+as-path\s+(\S+)/);
+                        if (asMatch && analysisData.asPathLists[asMatch[1]]) {
+                            if (!rmData.relatedItems.includes(`as-path:${asMatch[1]}`)) {
+                                rmData.relatedItems.push(`as-path:${asMatch[1]}`);
+                            }
+                            if (!analysisData.asPathLists[asMatch[1]].relatedItems.includes(`route-map:${rmName}`)) {
+                                analysisData.asPathLists[asMatch[1]].relatedItems.push(`route-map:${rmName}`);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function displayResults() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+
+            // Summary cards - show top categories
+            const totalRoutingPolicies = Object.keys(analysisData.routeMaps).length +
+                Object.keys(analysisData.prefixLists).length +
+                Object.keys(analysisData.asPathLists).length +
+                Object.keys(analysisData.communityLists).length +
+                Object.keys(analysisData.extCommunityLists).length;
+
+            const totalACLs = Object.keys(analysisData.accessLists).length;
+            const totalQoS = Object.keys(analysisData.policyMaps).length + Object.keys(analysisData.classMaps).length;
+            const totalBGP = Object.keys(analysisData.routeReflectors).length + Object.keys(analysisData.filterLists).length;
+
+            const summaryHTML = `
+                <div class="summary-card">
+                    <h3>${totalRoutingPolicies}</h3>
+                    <p>Routing Policies</p>
+                </div>
+                <div class="summary-card">
+                    <h3>${totalACLs}</h3>
+                    <p>Access Lists</p>
+                </div>
+                <div class="summary-card">
+                    <h3>${totalQoS}</h3>
+                    <p>QoS Policies</p>
+                </div>
+                <div class="summary-card">
+                    <h3>${Object.keys(analysisData.staticRoutes).length}</h3>
+                    <p>Static Routes</p>
+                </div>
+            `;
+            document.getElementById('summaryCards').innerHTML = summaryHTML;
+
+            updateItemCount();
+            applyFilters();
+
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function applyFilters() {
+            currentFilters.type = document.getElementById('filterType').value;
+            currentFilters.name = document.getElementById('searchName').value.toLowerCase();
+            currentFilters.usage = document.getElementById('filterUsage').value;
+
+            // If searching by name, try to show complete related config
+            if (currentFilters.name) {
+                detectAndShowCompleteConfig(currentFilters.name);
+            } else {
+                hideCompleteConfig();
+            }
+
+            displayRouteMaps();
+            displayPrefixLists();
+            displayAsPathLists();
+            displayCommunityLists();
+            displayAccessLists();
+            displayDistributeLists();
+            displayFilterLists();
+            displayPolicyMaps();
+            displayClassMaps();
+            displayRouteReflectors();
+            displayStaticRoutes();
+        }
+
+        function detectAndShowCompleteConfig(searchTerm) {
+            // Find the exact item that matches the search term
+            let foundType = null;
+            let foundName = null;
+
+            // Check route-maps
+            for (const name of Object.keys(analysisData.routeMaps)) {
+                if (name.toLowerCase() === searchTerm) {
+                    foundType = 'route-map';
+                    foundName = name;
+                    break;
+                }
+            }
+
+            // Check prefix-lists
+            if (!foundType) {
+                for (const name of Object.keys(analysisData.prefixLists)) {
+                    if (name.toLowerCase() === searchTerm) {
+                        foundType = 'prefix-list';
+                        foundName = name;
+                        break;
+                    }
+                }
+            }
+
+            // Check extcommunity-lists
+            if (!foundType) {
+                for (const name of Object.keys(analysisData.extCommunityLists)) {
+                    if (name.toLowerCase() === searchTerm) {
+                        foundType = 'extcommunity-list';
+                        foundName = name;
+                        break;
+                    }
+                }
+            }
+
+            // Check community-lists
+            if (!foundType) {
+                for (const name of Object.keys(analysisData.communityLists)) {
+                    if (name.toLowerCase() === searchTerm) {
+                        foundType = 'community-list';
+                        foundName = name;
+                        break;
+                    }
+                }
+            }
+
+            // Check as-path lists
+            if (!foundType) {
+                for (const name of Object.keys(analysisData.asPathLists)) {
+                    if (name.toLowerCase() === searchTerm) {
+                        foundType = 'as-path';
+                        foundName = name;
+                        break;
+                    }
+                }
+            }
+
+            // Check access-lists
+            if (!foundType) {
+                for (const name of Object.keys(analysisData.accessLists)) {
+                    if (name.toLowerCase() === searchTerm) {
+                        foundType = 'access-list';
+                        foundName = name;
+                        break;
+                    }
+                }
+            }
+
+            // Check policy-maps
+            if (!foundType) {
+                for (const name of Object.keys(analysisData.policyMaps)) {
+                    if (name.toLowerCase() === searchTerm) {
+                        foundType = 'policy-map';
+                        foundName = name;
+                        break;
+                    }
+                }
+            }
+
+            // Check class-maps
+            if (!foundType) {
+                for (const name of Object.keys(analysisData.classMaps)) {
+                    if (name.toLowerCase() === searchTerm) {
+                        foundType = 'class-map';
+                        foundName = name;
+                        break;
+                    }
+                }
+            }
+
+            // Check distribute-lists
+            if (!foundType) {
+                for (const name of Object.keys(analysisData.distributeLists)) {
+                    if (name.toLowerCase() === searchTerm) {
+                        foundType = 'distribute-list';
+                        foundName = name;
+                        break;
+                    }
+                }
+            }
+
+            // Check filter-lists
+            if (!foundType) {
+                for (const name of Object.keys(analysisData.filterLists)) {
+                    if (name.toLowerCase() === searchTerm) {
+                        foundType = 'filter-list';
+                        foundName = name;
+                        break;
+                    }
+                }
+            }
+
+            // Check route-reflectors
+            if (!foundType) {
+                for (const neighbor of Object.keys(analysisData.routeReflectors)) {
+                    if (neighbor.toLowerCase() === searchTerm) {
+                        foundType = 'route-reflector';
+                        foundName = neighbor;
+                        break;
+                    }
+                }
+            }
+
+            // If found exact match, show complete config
+            if (foundType && foundName) {
+                showCompleteConfigSection(foundType, foundName);
+            } else {
+                hideCompleteConfig();
+            }
+        }
+
+        function showCompleteConfigSection(type, name) {
+            const section = document.getElementById('completeConfigSection');
+            const nameEl = document.getElementById('filteredItemName');
+            const displayEl = document.getElementById('completeConfigDisplay');
+
+            nameEl.textContent = `${type}: ${name}`;
+
+            // Build complete related configuration
+            let configHtml = buildCompleteRelatedConfig(type, name);
+            displayEl.innerHTML = configHtml;
+
+            section.style.display = 'block';
+
+            // Scroll to the complete config section
+            setTimeout(() => {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
+
+        function buildCompleteRelatedConfig(type, name) {
+            let config = '';
+            let processedItems = new Set();
+            let allRelatedItems = [];
+
+            // Build the main configuration and collect all related items
+            if (type === 'route-map') {
+                config += buildRouteMapConfigInline(name, processedItems, allRelatedItems);
+            } else if (type === 'prefix-list') {
+                config += buildPrefixListConfigInline(name, processedItems, allRelatedItems);
+            } else if (type === 'extcommunity-list') {
+                config += buildExtCommunityListConfigInline(name, processedItems, allRelatedItems);
+            } else if (type === 'community-list') {
+                config += buildCommunityListConfigInline(name, processedItems, allRelatedItems);
+            } else if (type === 'as-path') {
+                config += buildAsPathConfigInline(name, processedItems, allRelatedItems);
+            } else if (type === 'access-list') {
+                config += buildAccessListConfigInline(name, processedItems, allRelatedItems);
+            } else if (type === 'policy-map') {
+                config += buildPolicyMapConfigInline(name, processedItems, allRelatedItems);
+            } else if (type === 'class-map') {
+                config += buildClassMapConfigInline(name, processedItems, allRelatedItems);
+            } else if (type === 'distribute-list') {
+                config += buildDistributeListConfigInline(name, processedItems, allRelatedItems);
+            } else if (type === 'filter-list') {
+                config += buildFilterListConfigInline(name, processedItems, allRelatedItems);
+            } else if (type === 'route-reflector') {
+                config += buildRouteReflectorConfigInline(name, processedItems, allRelatedItems);
+            }
+
+            return config;
+        }
+
+        function buildDistributeListConfigInline(name, processedItems, allRelatedItems) {
+            if (processedItems.has(`distribute-list:${name}`) || !analysisData.distributeLists[name]) {
+                return '';
+            }
+            processedItems.add(`distribute-list:${name}`);
+
+            let config = '';
+            const dlData = analysisData.distributeLists[name];
+
+            config += '<div class="config-section-header">! WHERE THIS DISTRIBUTE-LIST IS APPLIED</div>';
+            for (const app of dlData.applications) {
+                config += `<div class="config-style-line config-comment">! Distribute-List: distribute-list ${name} ${app.direction} ${app.context}</div>`;
+            }
+
+            return config;
+        }
+
+        function buildFilterListConfigInline(name, processedItems, allRelatedItems) {
+            if (processedItems.has(`filter-list:${name}`) || !analysisData.filterLists[name]) {
+                return '';
+            }
+            processedItems.add(`filter-list:${name}`);
+
+            let config = '';
+            const flData = analysisData.filterLists[name];
+
+            config += '<div class="config-section-header">! WHERE THIS FILTER-LIST IS APPLIED</div>';
+            for (const app of flData.applications) {
+                config += `<div class="config-style-line config-comment">! BGP Neighbor: neighbor ${app.neighbor} filter-list ${name} ${app.direction}</div>`;
+            }
+
+            return config;
+        }
+
+        function buildRouteReflectorConfigInline(neighbor, processedItems, allRelatedItems) {
+            if (processedItems.has(`route-reflector:${neighbor}`) || !analysisData.routeReflectors[neighbor]) {
+                return '';
+            }
+            processedItems.add(`route-reflector:${neighbor}`);
+
+            let config = '';
+            const rrData = analysisData.routeReflectors[neighbor];
+
+            config += '<div class="config-section-header">! Route-Reflector Client Configuration</div>';
+            for (const configLine of rrData.config) {
+                config += `<div class="config-style-line config-header">${configLine}</div>`;
+            }
+
+            return config;
+        }
+
+        function buildAccessListConfigInline(name, processedItems, allRelatedItems) {
+            if (processedItems.has(`access-list:${name}`) || !analysisData.accessLists[name]) {
+                return '';
+            }
+            processedItems.add(`access-list:${name}`);
+
+            let config = '';
+            const aclData = analysisData.accessLists[name];
+
+            config += '<div class="config-section-header">! Access-List Configuration</div>';
+            for (const entry of aclData.entries) {
+                config += `<div class="config-style-line config-header">access-list ${name} ${entry.action} ${entry.criteria}</div>`;
+            }
+
+            // Show where this ACL is applied
+            const apps = analysisData.applications.accessLists[name];
+            if (apps && apps.length > 0) {
+                config += '<div class="config-section-header">! Where This Access-List is Applied</div>';
+                for (const app of apps) {
+                    config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                }
+            }
+
+            return config;
+        }
+
+        function buildPolicyMapConfigInline(name, processedItems, allRelatedItems) {
+            if (processedItems.has(`policy-map:${name}`) || !analysisData.policyMaps[name]) {
+                return '';
+            }
+            processedItems.add(`policy-map:${name}`);
+
+            let config = '';
+            const pmData = analysisData.policyMaps[name];
+
+            config += '<div class="config-section-header">! Policy-Map Configuration</div>';
+            config += `<div class="config-style-line config-header">policy-map ${name}</div>`;
+
+            for (const classItem of pmData.classes) {
+                config += `<div class="config-style-line config-indent-1">class ${classItem.name}</div>`;
+                for (const action of classItem.actions) {
+                    config += `<div class="config-style-line config-indent-2">${action}</div>`;
+                }
+            }
+
+            // Show where this policy-map is applied
+            const apps = analysisData.applications.policyMaps[name];
+            if (apps && apps.length > 0) {
+                config += '<div class="config-section-header">! Where This Policy-Map is Applied</div>';
+                for (const app of apps) {
+                    config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                }
+            }
+
+            return config;
+        }
+
+        function buildClassMapConfigInline(name, processedItems, allRelatedItems) {
+            if (processedItems.has(`class-map:${name}`) || !analysisData.classMaps[name]) {
+                return '';
+            }
+            processedItems.add(`class-map:${name}`);
+
+            let config = '';
+            const cmData = analysisData.classMaps[name];
+
+            config += '<div class="config-section-header">! Class-Map Configuration</div>';
+            config += `<div class="config-style-line config-header">class-map ${name}</div>`;
+
+            for (const match of cmData.matches) {
+                config += `<div class="config-style-line config-indent-1">${match}</div>`;
+            }
+
+            // Show where this class-map is applied
+            const apps = analysisData.applications.classMaps[name];
+            if (apps && apps.length > 0) {
+                config += '<div class="config-section-header">! Where This Class-Map is Applied</div>';
+                for (const app of apps) {
+                    config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                }
+            }
+
+            return config;
+        }
+
+        function buildRouteMapConfigInline(name, processedItems, allRelatedItems) {
+            if (processedItems.has(`route-map:${name}`) || !analysisData.routeMaps[name]) {
+                return '';
+            }
+            processedItems.add(`route-map:${name}`);
+
+            let config = '';
+            const rmData = analysisData.routeMaps[name];
+
+            // Collect all related items from the route-map
+            let relatedPrefixLists = [];
+            let relatedExtCommLists = [];
+            let relatedCommLists = [];
+            let relatedAsPathLists = [];
+
+            for (const seq of rmData.sequences) {
+                for (const match of seq.matches) {
+                    const plMatch = match.match(/match\s+ip\s+address\s+prefix-list\s+(\S+)/);
+                    if (plMatch && !relatedPrefixLists.includes(plMatch[1])) {
+                        relatedPrefixLists.push(plMatch[1]);
+                    }
+
+                    const extCommMatch = match.match(/match\s+extcommunity\s+(\S+)/);
+                    if (extCommMatch && !relatedExtCommLists.includes(extCommMatch[1])) {
+                        relatedExtCommLists.push(extCommMatch[1]);
+                    }
+
+                    const commMatch = match.match(/match\s+community\s+(\S+)/);
+                    if (commMatch && !relatedCommLists.includes(commMatch[1])) {
+                        relatedCommLists.push(commMatch[1]);
+                    }
+
+                    const asMatch = match.match(/match\s+as-path\s+(\S+)/);
+                    if (asMatch && !relatedAsPathLists.includes(asMatch[1])) {
+                        relatedAsPathLists.push(asMatch[1]);
+                    }
+                }
+            }
+
+            // Show where this route-map is applied FIRST
+            const apps = analysisData.applications.routeMaps[name];
+            if (apps && apps.length > 0) {
+                config += '<div class="config-section-header">! WHERE THIS ROUTE-MAP IS APPLIED</div>';
+                for (const app of apps) {
+                    config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                }
+                config += '<div class="config-style-line config-exclamation">!</div>';
+            }
+
+            // Build route-map configuration
+            config += '<div class="config-section-header">! Route-Map Configuration</div>';
+            for (const seq of rmData.sequences) {
+                config += `<div class="config-style-line config-header">route-map ${name} ${seq.action} ${seq.sequence}</div>`;
+                for (const match of seq.matches) {
+                    config += `<div class="config-style-line config-indent-1 config-match">${match}</div>`;
+                }
+                for (const set of seq.sets) {
+                    config += `<div class="config-style-line config-indent-1 config-set">${set}</div>`;
+                }
+                config += `<div class="config-style-line config-exclamation">!</div>`;
+            }
+
+            // Add all related prefix-lists
+            for (const plName of relatedPrefixLists) {
+                if (analysisData.prefixLists[plName] && !processedItems.has(`prefix-list:${plName}`)) {
+                    processedItems.add(`prefix-list:${plName}`);
+                    config += '<div class="config-section-header">! Prefix-List: ' + plName + '</div>';
+
+                    // Show where prefix-list is applied
+                    const plApps = analysisData.applications.prefixLists[plName];
+                    if (plApps && plApps.length > 0) {
+                        for (const app of plApps) {
+                            config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                        }
+                    }
+
+                    for (const entry of analysisData.prefixLists[plName].entries) {
+                        config += `<div class="config-style-line config-header">ip prefix-list ${plName} seq ${entry.sequence} ${entry.action} ${entry.prefix}</div>`;
+                    }
+                }
+            }
+
+            // Add all related extcommunity-lists
+            for (const extCommName of relatedExtCommLists) {
+                if (analysisData.extCommunityLists[extCommName] && !processedItems.has(`extcommunity-list:${extCommName}`)) {
+                    processedItems.add(`extcommunity-list:${extCommName}`);
+                    const extCommData = analysisData.extCommunityLists[extCommName];
+                    config += '<div class="config-section-header">! Extended Community-List: ' + extCommName + '</div>';
+
+                    // Show where extcommunity-list is applied
+                    const extApps = analysisData.applications.extCommunityLists[extCommName];
+                    if (extApps && extApps.length > 0) {
+                        for (const app of extApps) {
+                            config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                        }
+                    }
+
+                    for (const entry of extCommData.entries) {
+                        config += `<div class="config-style-line config-header">ip extcommunity-list ${extCommData.type} ${extCommName} ${entry.action} ${entry.community}</div>`;
+                    }
+                }
+            }
+
+            // Add all related community-lists
+            for (const commName of relatedCommLists) {
+                if (analysisData.communityLists[commName] && !processedItems.has(`community-list:${commName}`)) {
+                    processedItems.add(`community-list:${commName}`);
+                    const commData = analysisData.communityLists[commName];
+                    config += '<div class="config-section-header">! Community-List: ' + commName + '</div>';
+
+                    // Show where community-list is applied
+                    const commApps = analysisData.applications.communityLists[commName];
+                    if (commApps && commApps.length > 0) {
+                        for (const app of commApps) {
+                            config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                        }
+                    }
+
+                    for (const entry of commData.entries) {
+                        config += `<div class="config-style-line config-header">ip community-list ${commData.type} ${commName} ${entry.action} ${entry.community}</div>`;
+                    }
+                }
+            }
+
+            // Add all related as-path lists
+            for (const asName of relatedAsPathLists) {
+                if (analysisData.asPathLists[asName] && !processedItems.has(`as-path:${asName}`)) {
+                    processedItems.add(`as-path:${asName}`);
+                    config += '<div class="config-section-header">! AS-Path List: ' + asName + '</div>';
+
+                    // Show where as-path list is applied
+                    const asApps = analysisData.applications.asPathLists[asName];
+                    if (asApps && asApps.length > 0) {
+                        for (const app of asApps) {
+                            config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                        }
+                    }
+
+                    for (const entry of analysisData.asPathLists[asName].entries) {
+                        config += `<div class="config-style-line config-header">ip as-path access-list ${asName} ${entry.action} ${entry.regex}</div>`;
+                    }
+                }
+            }
+
+            return config;
+        }
+
+        function buildPrefixListConfigInline(name, processedItems, allRelatedItems) {
+            if (processedItems.has(`prefix-list:${name}`) || !analysisData.prefixLists[name]) {
+                return '';
+            }
+            processedItems.add(`prefix-list:${name}`);
+
+            let config = '';
+            const plData = analysisData.prefixLists[name];
+
+            // Show the prefix-list first
+            config += '<div class="config-section-header">! Prefix-List Configuration</div>';
+            for (const entry of plData.entries) {
+                config += `<div class="config-style-line config-header">ip prefix-list ${name} seq ${entry.sequence} ${entry.action} ${entry.prefix}</div>`;
+            }
+
+            // Show where this prefix-list is applied
+            const apps = analysisData.applications.prefixLists[name];
+            if (apps && apps.length > 0) {
+                config += '<div class="config-section-header">! Where This Prefix-List is Applied</div>';
+                for (const app of apps) {
+                    config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                }
+            }
+
+            // Add all route-maps that use this prefix-list
+            for (const relItem of plData.relatedItems) {
+                const [itemType, itemName] = relItem.split(':');
+                if (itemType === 'route-map' && !processedItems.has(`route-map:${itemName}`)) {
+                    config += buildRouteMapConfigInline(itemName, processedItems, allRelatedItems);
+                }
+            }
+
+            return config;
+        }
+
+        function buildExtCommunityListConfigInline(name, processedItems, allRelatedItems) {
+            if (processedItems.has(`extcommunity-list:${name}`) || !analysisData.extCommunityLists[name]) {
+                return '';
+            }
+            processedItems.add(`extcommunity-list:${name}`);
+
+            let config = '';
+            const extCommData = analysisData.extCommunityLists[name];
+
+            // Show the extcommunity-list first
+            config += '<div class="config-section-header">! Extended Community-List Configuration</div>';
+            for (const entry of extCommData.entries) {
+                config += `<div class="config-style-line config-header">ip extcommunity-list ${extCommData.type} ${name} ${entry.action} ${entry.community}</div>`;
+            }
+
+            // Show where this extcommunity-list is applied
+            const apps = analysisData.applications.extCommunityLists[name];
+            if (apps && apps.length > 0) {
+                config += '<div class="config-section-header">! Where This ExtCommunity-List is Applied</div>';
+                for (const app of apps) {
+                    config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                }
+            }
+
+            // Add all route-maps that use this extcommunity-list
+            for (const relItem of extCommData.relatedItems) {
+                const [itemType, itemName] = relItem.split(':');
+                if (itemType === 'route-map' && !processedItems.has(`route-map:${itemName}`)) {
+                    config += buildRouteMapConfigInline(itemName, processedItems, allRelatedItems);
+                }
+            }
+
+            return config;
+        }
+
+        function buildCommunityListConfigInline(name, processedItems, allRelatedItems) {
+            if (processedItems.has(`community-list:${name}`) || !analysisData.communityLists[name]) {
+                return '';
+            }
+            processedItems.add(`community-list:${name}`);
+
+            let config = '';
+            const commData = analysisData.communityLists[name];
+
+            // Show the community-list first
+            config += '<div class="config-section-header">! Community-List Configuration</div>';
+            for (const entry of commData.entries) {
+                config += `<div class="config-style-line config-header">ip community-list ${commData.type} ${name} ${entry.action} ${entry.community}</div>`;
+            }
+
+            // Show where this community-list is applied
+            const apps = analysisData.applications.communityLists[name];
+            if (apps && apps.length > 0) {
+                config += '<div class="config-section-header">! Where This Community-List is Applied</div>';
+                for (const app of apps) {
+                    config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                }
+            }
+
+            // Add all route-maps that use this community-list
+            for (const relItem of commData.relatedItems) {
+                const [itemType, itemName] = relItem.split(':');
+                if (itemType === 'route-map' && !processedItems.has(`route-map:${itemName}`)) {
+                    config += buildRouteMapConfigInline(itemName, processedItems, allRelatedItems);
+                }
+            }
+
+            return config;
+        }
+
+        function buildAsPathConfigInline(name, processedItems, allRelatedItems) {
+            if (processedItems.has(`as-path:${name}`) || !analysisData.asPathLists[name]) {
+                return '';
+            }
+            processedItems.add(`as-path:${name}`);
+
+            let config = '';
+            const asData = analysisData.asPathLists[name];
+
+            // Show the as-path list first
+            config += '<div class="config-section-header">! AS-Path List Configuration</div>';
+            for (const entry of asData.entries) {
+                config += `<div class="config-style-line config-header">ip as-path access-list ${name} ${entry.action} ${entry.regex}</div>`;
+            }
+
+            // Show where this as-path list is applied
+            const apps = analysisData.applications.asPathLists[name];
+            if (apps && apps.length > 0) {
+                config += '<div class="config-section-header">! Where This AS-Path List is Applied</div>';
+                for (const app of apps) {
+                    config += `<div class="config-style-line config-comment">! ${app.type}: ${app.location}</div>`;
+                }
+            }
+
+            // Add all route-maps that use this as-path list
+            for (const relItem of asData.relatedItems) {
+                const [itemType, itemName] = relItem.split(':');
+                if (itemType === 'route-map' && !processedItems.has(`route-map:${itemName}`)) {
+                    config += buildRouteMapConfigInline(itemName, processedItems, allRelatedItems);
+                }
+            }
+
+            return config;
+        }
+
+        function hideCompleteConfig() {
+            document.getElementById('completeConfigSection').style.display = 'none';
+        }
+
+        function copyCompleteConfig() {
+            const displayEl = document.getElementById('completeConfigDisplay');
+            const configText = displayEl.innerText;
+
+            navigator.clipboard.writeText(configText).then(() => {
+                alert('Complete configuration copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy to clipboard. Please try selecting and copying manually.');
+            });
+        }
+
+        function displayAccessLists() {
+            if (!shouldDisplaySection('access-lists')) {
+                document.getElementById('accessListsSection').innerHTML = '';
+                return;
+            }
+
+            const accessLists = analysisData.accessLists;
+            let html = '';
+            let visibleCount = 0;
+
+            for (const [name, data] of Object.entries(accessLists)) {
+                if (!shouldDisplay(name, 'access-lists', false)) continue;
+                visibleCount++;
+                const itemId = `access-list-${name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>🔒 access-list ${name} (${data.type})</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">`;
+
+                // Show where it's applied
+                const apps = analysisData.applications.accessLists[name];
+                if (apps && apps.length > 0) {
+                    html += '<div class="applied-locations">';
+                    html += '<h4>✅ WHERE THIS ACCESS-LIST IS USED:</h4><ul>';
+                    for (const app of apps) {
+                        html += `<li><span class="usage-badge">${app.type}</span>${app.location}</li>`;
+                    }
+                    html += '</ul></div>';
+                } else {
+                    html += '<div class="not-used">⚠️ NOT USED</div>';
+                }
+
+                html += `<button class="show-related-btn" onclick="showRelatedConfig('access-list', '${name}')">📄 Show Complete Config</button>`;
+
+                html += '<div class="config-style-block">';
+
+                for (const entry of data.entries) {
+                    html += `<div class="config-style-line config-header">access-list ${name} ${entry.action} ${entry.criteria}</div>`;
+                }
+
+                html += '</div></div></div>';
+            }
+
+            if (visibleCount > 0) {
+                document.getElementById('accessListsSection').innerHTML =
+                    `<div class="section"><h2>🔒 Access Lists (${visibleCount})</h2>${html}</div>`;
+            } else {
+                document.getElementById('accessListsSection').innerHTML = '';
+            }
+        }
+
+        function displayDistributeLists() {
+            if (!shouldDisplaySection('distribute-lists')) {
+                document.getElementById('distributeListsSection').innerHTML = '';
+                return;
+            }
+
+            const distributeLists = analysisData.distributeLists;
+            let html = '';
+            let visibleCount = 0;
+
+            for (const [name, data] of Object.entries(distributeLists)) {
+                if (!shouldDisplay(name, 'distribute-lists', true)) continue;
+                visibleCount++;
+                const itemId = `distribute-list-${name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>📡 distribute-list ${name}</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">
+                    <div class="applied-locations">
+                        <h4>✅ WHERE THIS DISTRIBUTE-LIST IS USED:</h4><ul>`;
+
+                for (const app of data.applications) {
+                    html += `<li><span class="usage-badge">Distribute-List</span>distribute-list ${name} ${app.direction} ${app.context}</li>`;
+                }
+
+                html += '</ul></div></div></div>';
+            }
+
+            if (visibleCount > 0) {
+                document.getElementById('distributeListsSection').innerHTML =
+                    `<div class="section"><h2>📡 Distribute-Lists (${visibleCount})</h2>${html}</div>`;
+            } else {
+                document.getElementById('distributeListsSection').innerHTML = '';
+            }
+        }
+
+        function displayFilterLists() {
+            if (!shouldDisplaySection('filter-lists')) {
+                document.getElementById('filterListsSection').innerHTML = '';
+                return;
+            }
+
+            const filterLists = analysisData.filterLists;
+            let html = '';
+            let visibleCount = 0;
+
+            for (const [name, data] of Object.entries(filterLists)) {
+                if (!shouldDisplay(name, 'filter-lists', true)) continue;
+                visibleCount++;
+                const itemId = `filter-list-${name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>🔀 filter-list ${name}</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">
+                    <div class="applied-locations">
+                        <h4>✅ WHERE THIS FILTER-LIST IS USED:</h4><ul>`;
+
+                for (const app of data.applications) {
+                    html += `<li><span class="usage-badge">BGP Neighbor</span>neighbor ${app.neighbor} filter-list ${name} ${app.direction}</li>`;
+                }
+
+                html += '</ul></div></div></div>';
+            }
+
+            if (visibleCount > 0) {
+                document.getElementById('filterListsSection').innerHTML =
+                    `<div class="section"><h2>🔀 Filter-Lists (BGP) (${visibleCount})</h2>${html}</div>`;
+            } else {
+                document.getElementById('filterListsSection').innerHTML = '';
+            }
+        }
+
+        function displayPolicyMaps() {
+            if (!shouldDisplaySection('policy-maps')) {
+                document.getElementById('policyMapsSection').innerHTML = '';
+                return;
+            }
+
+            const policyMaps = analysisData.policyMaps;
+            let html = '';
+            let visibleCount = 0;
+
+            for (const [name, data] of Object.entries(policyMaps)) {
+                if (!shouldDisplay(name, 'policy-maps', false)) continue;
+                visibleCount++;
+                const itemId = `policy-map-${name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>📊 policy-map ${name}</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">`;
+
+                // Show where it's applied
+                const apps = analysisData.applications.policyMaps[name];
+                if (apps && apps.length > 0) {
+                    html += '<div class="applied-locations">';
+                    html += '<h4>✅ WHERE THIS POLICY-MAP IS USED:</h4><ul>';
+                    for (const app of apps) {
+                        html += `<li><span class="usage-badge">${app.type}</span>${app.location}</li>`;
+                    }
+                    html += '</ul></div>';
+                } else {
+                    html += '<div class="not-used">⚠️ NOT USED</div>';
+                }
+
+                html += `<button class="show-related-btn" onclick="showRelatedConfig('policy-map', '${name}')">📄 Show Complete Config</button>`;
+
+                html += `<div class="config-style-block">
+                        <div class="config-style-line config-header">policy-map ${name}</div>`;
+
+                for (const classItem of data.classes) {
+                    html += `<div class="config-style-line config-indent-1 config-header">class ${classItem.name}</div>`;
+                    for (const action of classItem.actions) {
+                        html += `<div class="config-style-line config-indent-2 config-set">${action}</div>`;
+                    }
+                }
+
+                html += '</div></div></div>';
+            }
+
+            if (visibleCount > 0) {
+                document.getElementById('policyMapsSection').innerHTML =
+                    `<div class="section"><h2>📊 Policy-Maps (QoS) (${visibleCount})</h2>${html}</div>`;
+            } else {
+                document.getElementById('policyMapsSection').innerHTML = '';
+            }
+        }
+
+        function displayClassMaps() {
+            if (!shouldDisplaySection('class-maps')) {
+                document.getElementById('classMapsSection').innerHTML = '';
+                return;
+            }
+
+            const classMaps = analysisData.classMaps;
+            let html = '';
+            let visibleCount = 0;
+
+            for (const [name, data] of Object.entries(classMaps)) {
+                if (!shouldDisplay(name, 'class-maps', false)) continue;
+                visibleCount++;
+                const itemId = `class-map-${name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>📦 class-map ${name}</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">`;
+
+                // Show where it's applied
+                const apps = analysisData.applications.classMaps[name];
+                if (apps && apps.length > 0) {
+                    html += '<div class="applied-locations">';
+                    html += '<h4>✅ WHERE THIS CLASS-MAP IS USED:</h4><ul>';
+                    for (const app of apps) {
+                        html += `<li><span class="usage-badge">${app.type}</span>${app.location}</li>`;
+                    }
+                    html += '</ul></div>';
+                } else {
+                    html += '<div class="not-used">⚠️ NOT USED</div>';
+                }
+
+                html += `<button class="show-related-btn" onclick="showRelatedConfig('class-map', '${name}')">📄 Show Complete Config</button>`;
+
+                html += `<div class="config-style-block">
+                        <div class="config-style-line config-header">class-map ${name}</div>`;
+
+                for (const match of data.matches) {
+                    html += `<div class="config-style-line config-indent-1 config-match">${match}</div>`;
+                }
+
+                html += '</div></div></div>';
+            }
+
+            if (visibleCount > 0) {
+                document.getElementById('classMapsSection').innerHTML =
+                    `<div class="section"><h2>📦 Class-Maps (QoS) (${visibleCount})</h2>${html}</div>`;
+            } else {
+                document.getElementById('classMapsSection').innerHTML = '';
+            }
+        }
+
+        function displayRouteReflectors() {
+            if (!shouldDisplaySection('route-reflectors')) {
+                document.getElementById('routeReflectorsSection').innerHTML = '';
+                return;
+            }
+
+            const routeReflectors = analysisData.routeReflectors;
+            let html = '';
+            let visibleCount = 0;
+
+            for (const [neighbor, data] of Object.entries(routeReflectors)) {
+                if (!shouldDisplay(neighbor, 'route-reflectors', true)) continue;
+                visibleCount++;
+                const itemId = `route-reflector-${neighbor.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>🔄 Route-Reflector Client: ${neighbor}</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">
+                    <div class="config-style-block">`;
+
+                for (const config of data.config) {
+                    html += `<div class="config-style-line config-header">${config}</div>`;
+                }
+
+                html += '</div></div></div>';
+            }
+
+            if (visibleCount > 0) {
+                document.getElementById('routeReflectorsSection').innerHTML =
+                    `<div class="section"><h2>🔄 Route-Reflector Clients (${visibleCount})</h2>${html}</div>`;
+            } else {
+                document.getElementById('routeReflectorsSection').innerHTML = '';
+            }
+        }
+
+        function displayStaticRoutes() {
+            if (!shouldDisplaySection('static-routes')) {
+                document.getElementById('staticRoutesSection').innerHTML = '';
+                return;
+            }
+
+            const staticRoutes = analysisData.staticRoutes;
+            let html = '';
+            let visibleCount = 0;
+
+            for (const [routeName, data] of Object.entries(staticRoutes)) {
+                if (!shouldDisplay(data.network, 'static-routes', false)) continue;
+                visibleCount++;
+                const itemId = `static-route-${routeName.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>🗺️ Static Route: ${data.network} ${data.mask}</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">
+                    <div class="config-style-block">`;
+
+                for (const entry of data.entries) {
+                    html += `<div class="config-style-line config-header">${entry}</div>`;
+                }
+
+                html += '</div></div></div>';
+            }
+
+            if (visibleCount > 0) {
+                document.getElementById('staticRoutesSection').innerHTML =
+                    `<div class="section"><h2>🗺️ Static Routes (${visibleCount})</h2>${html}</div>`;
+            } else {
+                document.getElementById('staticRoutesSection').innerHTML = '';
+            }
+        }
+
+        function shouldDisplaySection(sectionType) {
+            const filterType = currentFilters.type;
+            return filterType === 'all' || filterType === sectionType;
+        }
+
+        function quickFilter(type) {
+            const searchInput = document.getElementById('searchName');
+
+            if (type === 'bgp') {
+                searchInput.value = 'bgp';
+            } else if (type === 'vrf') {
+                searchInput.value = 'vrf';
+            } else if (type === 'reset') {
+                searchInput.value = '';
+                document.getElementById('filterType').value = 'all';
+                document.getElementById('filterUsage').value = 'all';
+            }
+
+            applyFilters();
+        }
+
+        function updateSearchOptions() {
+            // Update item count and trigger filters
+            updateItemCount();
+            applyFilters();
+
+            // Clear search when changing type
+            const searchInput = document.getElementById('searchName');
+            if (searchInput.value) {
+                searchInput.value = '';
+            }
+
+            // Hide autocomplete
+            document.getElementById('autoCompleteList').classList.remove('show');
+        }
+
+        function updateItemCount() {
+            const filterType = document.getElementById('filterType').value;
+            const countEl = document.getElementById('itemCount');
+
+            let count = 0;
+            let label = '';
+
+            if (filterType === 'all') {
+                count = Object.keys(analysisData.routeMaps).length +
+                    Object.keys(analysisData.prefixLists).length +
+                    Object.keys(analysisData.asPathLists).length +
+                    Object.keys(analysisData.communityLists).length +
+                    Object.keys(analysisData.extCommunityLists).length +
+                    Object.keys(analysisData.accessLists).length +
+                    Object.keys(analysisData.distributeLists).length +
+                    Object.keys(analysisData.filterLists).length +
+                    Object.keys(analysisData.policyMaps).length +
+                    Object.keys(analysisData.classMaps).length +
+                    Object.keys(analysisData.routeReflectors).length +
+                    Object.keys(analysisData.staticRoutes).length;
+                label = 'total items';
+            } else if (filterType === 'route-maps') {
+                count = Object.keys(analysisData.routeMaps).length;
+                label = 'route-maps';
+            } else if (filterType === 'prefix-lists') {
+                count = Object.keys(analysisData.prefixLists).length;
+                label = 'prefix-lists';
+            } else if (filterType === 'as-path') {
+                count = Object.keys(analysisData.asPathLists).length;
+                label = 'AS-path lists';
+            } else if (filterType === 'community') {
+                count = Object.keys(analysisData.communityLists).length +
+                    Object.keys(analysisData.extCommunityLists).length;
+                label = 'community lists';
+            } else if (filterType === 'access-lists') {
+                count = Object.keys(analysisData.accessLists).length;
+                label = 'access lists';
+            } else if (filterType === 'distribute-lists') {
+                count = Object.keys(analysisData.distributeLists).length;
+                label = 'distribute-lists';
+            } else if (filterType === 'filter-lists') {
+                count = Object.keys(analysisData.filterLists).length;
+                label = 'filter-lists';
+            } else if (filterType === 'policy-maps') {
+                count = Object.keys(analysisData.policyMaps).length;
+                label = 'policy-maps';
+            } else if (filterType === 'class-maps') {
+                count = Object.keys(analysisData.classMaps).length;
+                label = 'class-maps';
+            } else if (filterType === 'route-reflectors') {
+                count = Object.keys(analysisData.routeReflectors).length;
+                label = 'route-reflectors';
+            } else if (filterType === 'static-routes') {
+                count = Object.keys(analysisData.staticRoutes).length;
+                label = 'static routes';
+            }
+
+            countEl.textContent = `(${count} ${label})`;
+        }
+
+        function handleSearchInput() {
+            const searchValue = document.getElementById('searchName').value;
+            const clearBtn = document.getElementById('clearSearch');
+
+            if (searchValue) {
+                clearBtn.style.display = 'block';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+
+            showAutoComplete();
+            applyFilters();
+        }
+
+        function clearSearchField() {
+            document.getElementById('searchName').value = '';
+            document.getElementById('clearSearch').style.display = 'none';
+            document.getElementById('autoCompleteList').classList.remove('show');
+            applyFilters();
+        }
+
+        function showAutoComplete() {
+            const searchValue = document.getElementById('searchName').value.toLowerCase();
+            const filterType = document.getElementById('filterType').value;
+            const autoCompleteList = document.getElementById('autoCompleteList');
+
+            let items = [];
+
+            // Collect items based on filter type
+            if (filterType === 'all' || filterType === 'route-maps') {
+                for (const [name, data] of Object.entries(analysisData.routeMaps)) {
+                    const hasApplications = analysisData.applications.routeMaps[name] &&
+                        analysisData.applications.routeMaps[name].length > 0;
+                    items.push({
+                        name: name,
+                        type: 'route-map',
+                        typeLabel: 'Route-Map',
+                        used: hasApplications
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'prefix-lists') {
+                for (const [name, data] of Object.entries(analysisData.prefixLists)) {
+                    const hasApplications = analysisData.applications.prefixLists[name] &&
+                        analysisData.applications.prefixLists[name].length > 0;
+                    items.push({
+                        name: name,
+                        type: 'prefix-list',
+                        typeLabel: 'Prefix-List',
+                        used: hasApplications
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'as-path') {
+                for (const [name, data] of Object.entries(analysisData.asPathLists)) {
+                    const hasApplications = analysisData.applications.asPathLists[name] &&
+                        analysisData.applications.asPathLists[name].length > 0;
+                    items.push({
+                        name: name,
+                        type: 'as-path',
+                        typeLabel: 'AS-Path List',
+                        used: hasApplications
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'community') {
+                for (const [name, data] of Object.entries(analysisData.communityLists)) {
+                    const hasApplications = analysisData.applications.communityLists[name] &&
+                        analysisData.applications.communityLists[name].length > 0;
+                    items.push({
+                        name: name,
+                        type: 'community-list',
+                        typeLabel: 'Community-List',
+                        used: hasApplications
+                    });
+                }
+
+                for (const [name, data] of Object.entries(analysisData.extCommunityLists)) {
+                    const hasApplications = analysisData.applications.extCommunityLists[name] &&
+                        analysisData.applications.extCommunityLists[name].length > 0;
+                    items.push({
+                        name: name,
+                        type: 'extcommunity-list',
+                        typeLabel: 'ExtCommunity-List',
+                        used: hasApplications
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'access-lists') {
+                for (const [name, data] of Object.entries(analysisData.accessLists)) {
+                    items.push({
+                        name: name,
+                        type: 'access-list',
+                        typeLabel: `ACL (${data.type})`,
+                        used: false
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'distribute-lists') {
+                for (const [name, data] of Object.entries(analysisData.distributeLists)) {
+                    items.push({
+                        name: name,
+                        type: 'distribute-list',
+                        typeLabel: 'Distribute-List',
+                        used: true
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'filter-lists') {
+                for (const [name, data] of Object.entries(analysisData.filterLists)) {
+                    items.push({
+                        name: name,
+                        type: 'filter-list',
+                        typeLabel: 'Filter-List (BGP)',
+                        used: true
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'policy-maps') {
+                for (const [name, data] of Object.entries(analysisData.policyMaps)) {
+                    items.push({
+                        name: name,
+                        type: 'policy-map',
+                        typeLabel: 'Policy-Map (QoS)',
+                        used: false
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'class-maps') {
+                for (const [name, data] of Object.entries(analysisData.classMaps)) {
+                    items.push({
+                        name: name,
+                        type: 'class-map',
+                        typeLabel: 'Class-Map (QoS)',
+                        used: false
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'route-reflectors') {
+                for (const [neighbor, data] of Object.entries(analysisData.routeReflectors)) {
+                    items.push({
+                        name: neighbor,
+                        type: 'route-reflector',
+                        typeLabel: 'Route-Reflector Client',
+                        used: true
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'distribute-lists') {
+                for (const [name, data] of Object.entries(analysisData.distributeLists)) {
+                    items.push({
+                        name: name,
+                        type: 'distribute-list',
+                        typeLabel: 'Distribute-List',
+                        used: true
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'filter-lists') {
+                for (const [name, data] of Object.entries(analysisData.filterLists)) {
+                    items.push({
+                        name: name,
+                        type: 'filter-list',
+                        typeLabel: 'Filter-List (BGP)',
+                        used: true
+                    });
+                }
+            }
+
+            if (filterType === 'all' || filterType === 'static-routes') {
+                for (const [routeName, data] of Object.entries(analysisData.staticRoutes)) {
+                    items.push({
+                        name: `${data.network} ${data.mask}`,
+                        type: 'static-route',
+                        typeLabel: 'Static Route',
+                        used: false
+                    });
+                }
+            }
+
+            // Filter items based on search value
+            if (searchValue) {
+                items = items.filter(item => item.name.toLowerCase().includes(searchValue));
+            }
+
+            // Sort: used items first, then alphabetically
+            items.sort((a, b) => {
+                if (a.used && !b.used) return -1;
+                if (!a.used && b.used) return 1;
+                return a.name.localeCompare(b.name);
+            });
+
+            // Limit to 20 items
+            items = items.slice(0, 20);
+
+            // Build HTML
+            let html = '';
+            if (items.length === 0) {
+                html = '<div class="auto-complete-item" style="color: var(--text-secondary); cursor: default;">No items found</div>';
+            } else {
+                for (const item of items) {
+                    const usageClass = item.used ? '' : 'unused';
+                    const usageText = item.used ? '✓ Used' : '⚠ Not Used';
+                    html += `
+                        <div class="auto-complete-item" onclick="selectAutoCompleteItem('${item.name.replace(/'/g, "\\'")}')">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-type">${item.typeLabel}</div>
+                            <div class="item-usage ${usageClass}">${usageText}</div>
+                        </div>
+                    `;
+                }
+            }
+
+            autoCompleteList.innerHTML = html;
+
+            if (items.length > 0) {
+                autoCompleteList.classList.add('show');
+            } else if (!searchValue) {
+                autoCompleteList.classList.add('show');
+            }
+        }
+
+        function selectAutoCompleteItem(name) {
+            document.getElementById('searchName').value = name;
+            document.getElementById('clearSearch').style.display = 'block';
+            document.getElementById('autoCompleteList').classList.remove('show');
+            applyFilters();
+        }
+
+        // Close autocomplete when clicking outside
+        document.addEventListener('click', function (event) {
+            const autoCompleteWrapper = document.querySelector('.auto-complete-wrapper');
+            const autoCompleteList = document.getElementById('autoCompleteList');
+
+            if (autoCompleteWrapper && !autoCompleteWrapper.contains(event.target)) {
+                autoCompleteList.classList.remove('show');
+            }
+        });
+
+        function shouldDisplay(name, itemType, hasApplications) {
+            // Type filter
+            if (currentFilters.type !== 'all' && currentFilters.type !== itemType) {
+                return false;
+            }
+
+            // Name filter
+            if (currentFilters.name && !name.toLowerCase().includes(currentFilters.name)) {
+                return false;
+            }
+
+            // Usage filter
+            if (currentFilters.usage === 'used' && !hasApplications) {
+                return false;
+            }
+            if (currentFilters.usage === 'unused' && hasApplications) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function toggleCollapse(id) {
+            const content = document.getElementById(id);
+            const icon = document.getElementById(id + '-icon');
+
+            content.classList.toggle('collapsed');
+            icon.classList.toggle('collapsed');
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.collapsible-content').forEach(el => {
+                el.classList.remove('collapsed');
+            });
+            document.querySelectorAll('.collapse-icon').forEach(el => {
+                el.classList.remove('collapsed');
+            });
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.collapsible-content').forEach(el => {
+                el.classList.add('collapsed');
+            });
+            document.querySelectorAll('.collapse-icon').forEach(el => {
+                el.classList.add('collapsed');
+            });
+        }
+
+        function scrollToItem(type, name) {
+            const element = document.getElementById(`${type}-${name.replace(/[^a-zA-Z0-9]/g, '_')}`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.style.backgroundColor = 'rgba(99, 102, 241, 0.3)';
+                setTimeout(() => {
+                    element.style.backgroundColor = '';
+                }, 2000);
+            }
+        }
+
+        function showRelatedConfig(type, name) {
+            const modal = document.getElementById('relatedConfigModal');
+            const titleEl = document.getElementById('modalTitle');
+            const displayEl = document.getElementById('relatedConfigDisplay');
+
+            titleEl.textContent = `Complete Configuration for ${type}: ${name}`;
+
+            // Build complete related configuration
+            let configText = buildRelatedConfig(type, name);
+
+            // Display in modal
+            displayEl.innerHTML = `<div class="config-style-block">${configText}</div>`;
+
+            modal.style.display = 'block';
+        }
+
+        function buildRelatedConfig(type, name) {
+            let config = '';
+            let processedItems = new Set();
+
+            if (type === 'route-map') {
+                config += buildRouteMapConfig(name, processedItems);
+            } else if (type === 'prefix-list') {
+                config += buildPrefixListConfig(name, processedItems);
+            } else if (type === 'extcommunity-list') {
+                config += buildExtCommunityListConfig(name, processedItems);
+            } else if (type === 'community-list') {
+                config += buildCommunityListConfig(name, processedItems);
+            } else if (type === 'as-path') {
+                config += buildAsPathConfig(name, processedItems);
+            }
+
+            return config;
+        }
+
+        function buildRouteMapConfig(name, processedItems) {
+            if (processedItems.has(`route-map:${name}`) || !analysisData.routeMaps[name]) {
+                return '';
+            }
+            processedItems.add(`route-map:${name}`);
+
+            let config = '';
+            const rmData = analysisData.routeMaps[name];
+
+            // First, collect all related items
+            let relatedPrefixLists = [];
+            let relatedExtCommLists = [];
+            let relatedCommLists = [];
+            let relatedAsPathLists = [];
+
+            for (const seq of rmData.sequences) {
+                for (const match of seq.matches) {
+                    const plMatch = match.match(/match\s+ip\s+address\s+prefix-list\s+(\S+)/);
+                    if (plMatch && !relatedPrefixLists.includes(plMatch[1])) {
+                        relatedPrefixLists.push(plMatch[1]);
+                    }
+
+                    const extCommMatch = match.match(/match\s+extcommunity\s+(\S+)/);
+                    if (extCommMatch && !relatedExtCommLists.includes(extCommMatch[1])) {
+                        relatedExtCommLists.push(extCommMatch[1]);
+                    }
+
+                    const commMatch = match.match(/match\s+community\s+(\S+)/);
+                    if (commMatch && !relatedCommLists.includes(commMatch[1])) {
+                        relatedCommLists.push(commMatch[1]);
+                    }
+
+                    const asMatch = match.match(/match\s+as-path\s+(\S+)/);
+                    if (asMatch && !relatedAsPathLists.includes(asMatch[1])) {
+                        relatedAsPathLists.push(asMatch[1]);
+                    }
+                }
+            }
+
+            // Build route-map configuration
+            config += '<div class="config-section-header">! Route-Map Configuration</div>';
+            for (const seq of rmData.sequences) {
+                config += `<div class="config-style-line config-header">route-map ${name} ${seq.action} ${seq.sequence}</div>`;
+                for (const match of seq.matches) {
+                    config += `<div class="config-style-line config-indent-1 config-match">${match}</div>`;
+                }
+                for (const set of seq.sets) {
+                    config += `<div class="config-style-line config-indent-1 config-set">${set}</div>`;
+                }
+                config += `<div class="config-style-line config-exclamation">!</div>`;
+            }
+
+            // Add related prefix-lists
+            for (const plName of relatedPrefixLists) {
+                if (analysisData.prefixLists[plName]) {
+                    config += '<div class="config-section-header">! Prefix-List: ' + plName + '</div>';
+                    for (const entry of analysisData.prefixLists[plName].entries) {
+                        config += `<div class="config-style-line config-header">ip prefix-list ${plName} seq ${entry.sequence} ${entry.action} ${entry.prefix}</div>`;
+                    }
+                }
+            }
+
+            // Add related extcommunity-lists
+            for (const extCommName of relatedExtCommLists) {
+                if (analysisData.extCommunityLists[extCommName]) {
+                    const extCommData = analysisData.extCommunityLists[extCommName];
+                    config += '<div class="config-section-header">! Extended Community-List: ' + extCommName + '</div>';
+                    for (const entry of extCommData.entries) {
+                        config += `<div class="config-style-line config-header">ip extcommunity-list ${extCommData.type} ${extCommName} ${entry.action} ${entry.community}</div>`;
+                    }
+                }
+            }
+
+            // Add related community-lists
+            for (const commName of relatedCommLists) {
+                if (analysisData.communityLists[commName]) {
+                    const commData = analysisData.communityLists[commName];
+                    config += '<div class="config-section-header">! Community-List: ' + commName + '</div>';
+                    for (const entry of commData.entries) {
+                        config += `<div class="config-style-line config-header">ip community-list ${commData.type} ${commName} ${entry.action} ${entry.community}</div>`;
+                    }
+                }
+            }
+
+            // Add related as-path lists
+            for (const asName of relatedAsPathLists) {
+                if (analysisData.asPathLists[asName]) {
+                    config += '<div class="config-section-header">! AS-Path List: ' + asName + '</div>';
+                    for (const entry of analysisData.asPathLists[asName].entries) {
+                        config += `<div class="config-style-line config-header">ip as-path access-list ${asName} ${entry.action} ${entry.regex}</div>`;
+                    }
+                }
+            }
+
+            // Add VRF usage if any
+            const apps = analysisData.applications.routeMaps[name];
+            if (apps) {
+                for (const app of apps) {
+                    if (app.type === 'VRF Import') {
+                        const vrfMatch = app.location.match(/ip vrf (\S+)/);
+                        if (vrfMatch) {
+                            config += '<div class="config-section-header">! VRF Configuration</div>';
+                            config += `<div class="config-style-line config-header">ip vrf ${vrfMatch[1]}</div>`;
+                            config += `<div class="config-style-line config-indent-1">import map ${name}</div>`;
+                        }
+                    } else if (app.type === 'BGP Neighbor') {
+                        config += '<div class="config-section-header">! BGP Application</div>';
+                        config += `<div class="config-style-line config-header">${app.location}</div>`;
+                    }
+                }
+            }
+
+            return config;
+        }
+
+        function buildPrefixListConfig(name, processedItems) {
+            if (processedItems.has(`prefix-list:${name}`) || !analysisData.prefixLists[name]) {
+                return '';
+            }
+            processedItems.add(`prefix-list:${name}`);
+
+            let config = '';
+            const plData = analysisData.prefixLists[name];
+
+            config += '<div class="config-section-header">! Prefix-List Configuration</div>';
+            for (const entry of plData.entries) {
+                config += `<div class="config-style-line config-header">ip prefix-list ${name} seq ${entry.sequence} ${entry.action} ${entry.prefix}</div>`;
+            }
+
+            // Add route-maps that use this prefix-list
+            for (const relItem of plData.relatedItems) {
+                const [itemType, itemName] = relItem.split(':');
+                if (itemType === 'route-map') {
+                    config += buildRouteMapConfig(itemName, processedItems);
+                }
+            }
+
+            return config;
+        }
+
+        function buildExtCommunityListConfig(name, processedItems) {
+            if (processedItems.has(`extcommunity-list:${name}`) || !analysisData.extCommunityLists[name]) {
+                return '';
+            }
+            processedItems.add(`extcommunity-list:${name}`);
+
+            let config = '';
+            const extCommData = analysisData.extCommunityLists[name];
+
+            config += '<div class="config-section-header">! Extended Community-List Configuration</div>';
+            for (const entry of extCommData.entries) {
+                config += `<div class="config-style-line config-header">ip extcommunity-list ${extCommData.type} ${name} ${entry.action} ${entry.community}</div>`;
+            }
+
+            // Add route-maps that use this extcommunity-list
+            for (const relItem of extCommData.relatedItems) {
+                const [itemType, itemName] = relItem.split(':');
+                if (itemType === 'route-map') {
+                    config += buildRouteMapConfig(itemName, processedItems);
+                }
+            }
+
+            return config;
+        }
+
+        function buildCommunityListConfig(name, processedItems) {
+            if (processedItems.has(`community-list:${name}`) || !analysisData.communityLists[name]) {
+                return '';
+            }
+            processedItems.add(`community-list:${name}`);
+
+            let config = '';
+            const commData = analysisData.communityLists[name];
+
+            config += '<div class="config-section-header">! Community-List Configuration</div>';
+            for (const entry of commData.entries) {
+                config += `<div class="config-style-line config-header">ip community-list ${commData.type} ${name} ${entry.action} ${entry.community}</div>`;
+            }
+
+            // Add route-maps that use this community-list
+            for (const relItem of commData.relatedItems) {
+                const [itemType, itemName] = relItem.split(':');
+                if (itemType === 'route-map') {
+                    config += buildRouteMapConfig(itemName, processedItems);
+                }
+            }
+
+            return config;
+        }
+
+        function buildAsPathConfig(name, processedItems) {
+            if (processedItems.has(`as-path:${name}`) || !analysisData.asPathLists[name]) {
+                return '';
+            }
+            processedItems.add(`as-path:${name}`);
+
+            let config = '';
+            const asData = analysisData.asPathLists[name];
+
+            config += '<div class="config-section-header">! AS-Path List Configuration</div>';
+            for (const entry of asData.entries) {
+                config += `<div class="config-style-line config-header">ip as-path access-list ${name} ${entry.action} ${entry.regex}</div>`;
+            }
+
+            // Add route-maps that use this as-path list
+            for (const relItem of asData.relatedItems) {
+                const [itemType, itemName] = relItem.split(':');
+                if (itemType === 'route-map') {
+                    config += buildRouteMapConfig(itemName, processedItems);
+                }
+            }
+
+            return config;
+        }
+
+        function closeRelatedModal() {
+            document.getElementById('relatedConfigModal').style.display = 'none';
+        }
+
+        function copyRelatedConfig() {
+            const displayEl = document.getElementById('relatedConfigDisplay');
+            const configText = displayEl.innerText;
+
+            navigator.clipboard.writeText(configText).then(() => {
+                alert('Configuration copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const modal = document.getElementById('relatedConfigModal');
+            if (event.target == modal) {
+                closeRelatedModal();
+            }
+        }
+
+        function displayRouteMaps() {
+            const routeMaps = analysisData.routeMaps;
+            const applications = analysisData.applications.routeMaps;
+
+            let html = '';
+            let visibleCount = 0;
+
+            for (const [name, data] of Object.entries(routeMaps)) {
+                const hasApplications = applications[name] && applications[name].length > 0;
+
+                if (!shouldDisplay(name, 'route-maps', hasApplications)) {
+                    continue;
+                }
+
+                visibleCount++;
+                const itemId = `route-map-${name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>🗺️ route-map ${name}</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">`;
+
+                // Show where it's applied
+                if (hasApplications) {
+                    html += '<div class="applied-locations">';
+                    html += '<h4>✅ WHERE THIS ROUTE-MAP IS USED:</h4><ul>';
+                    for (const app of applications[name]) {
+                        html += `<li><span class="usage-badge">${app.type}</span>${app.location}</li>`;
+                    }
+                    html += '</ul></div>';
+                } else {
+                    html += '<div class="not-used">⚠️ NOT USED - This route-map is not applied anywhere</div>';
+                }
+
+                // Show complete config button
+                html += `<button class="show-related-btn" onclick="showRelatedConfig('route-map', '${name}')">📄 Show Complete Related Config</button>`;
+
+                // Show related items
+                if (data.relatedItems.length > 0) {
+                    html += '<div class="related-items"><h4>🔗 Related Configuration Items:</h4>';
+                    for (const relItem of data.relatedItems) {
+                        const [itemType, itemName] = relItem.split(':');
+                        html += `<a class="related-link" onclick="scrollToItem('${itemType}', '${itemName}')">${itemType}: ${itemName}</a>`;
+                    }
+                    html += '</div>';
+                }
+
+                // Show configuration in Cisco style
+                html += '<div class="config-style-block">';
+
+                for (const seq of data.sequences) {
+                    html += `<div class="config-style-line config-header">route-map ${name} ${seq.action} ${seq.sequence}</div>`;
+
+                    for (const match of seq.matches) {
+                        html += `<div class="config-style-line config-indent-1 config-match">${match}</div>`;
+                    }
+
+                    for (const set of seq.sets) {
+                        html += `<div class="config-style-line config-indent-1 config-set">${set}</div>`;
+                    }
+
+                    html += `<div class="config-style-line config-exclamation">!</div>`;
+                }
+
+                html += '</div></div></div>';
+            }
+
+            if (visibleCount > 0) {
+                document.getElementById('routeMapsSection').innerHTML =
+                    `<div class="section"><h2>📋 Route-Maps Configuration (${visibleCount})</h2>${html}</div>`;
+            } else {
+                document.getElementById('routeMapsSection').innerHTML = '';
+            }
+        }
+
+        function displayPrefixLists() {
+            const prefixLists = analysisData.prefixLists;
+            const applications = analysisData.applications.prefixLists;
+
+            let html = '';
+            let visibleCount = 0;
+
+            for (const [name, data] of Object.entries(prefixLists)) {
+                const hasApplications = applications[name] && applications[name].length > 0;
+
+                if (!shouldDisplay(name, 'prefix-lists', hasApplications)) {
+                    continue;
+                }
+
+                visibleCount++;
+                const itemId = `prefix-list-${name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>📋 ip prefix-list ${name}</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">`;
+
+                // Show where it's used
+                if (hasApplications) {
+                    html += '<div class="applied-locations">';
+                    html += '<h4>✅ WHERE THIS PREFIX-LIST IS USED:</h4><ul>';
+                    for (const app of applications[name]) {
+                        html += `<li><span class="usage-badge">${app.type}</span>${app.location}</li>`;
+                    }
+                    html += '</ul></div>';
+                } else {
+                    html += '<div class="not-used">⚠️ NOT USED - This prefix-list is not referenced anywhere</div>';
+                }
+
+                // Show complete config button
+                html += `<button class="show-related-btn" onclick="showRelatedConfig('prefix-list', '${name}')">📄 Show Complete Related Config</button>`;
+
+                // Show related items
+                if (data.relatedItems.length > 0) {
+                    html += '<div class="related-items"><h4>🔗 Used by Route-Maps:</h4>';
+                    for (const relItem of data.relatedItems) {
+                        const [itemType, itemName] = relItem.split(':');
+                        html += `<a class="related-link" onclick="scrollToItem('${itemType}', '${itemName}')">${itemName}</a>`;
+                    }
+                    html += '</div>';
+                }
+
+                // Show configuration in Cisco style
+                html += '<div class="config-style-block">';
+
+                for (const entry of data.entries) {
+                    html += `<div class="config-style-line config-header">ip prefix-list ${name} seq ${entry.sequence} ${entry.action} ${entry.prefix}</div>`;
+                }
+
+                html += '</div></div></div>';
+            }
+
+            if (visibleCount > 0) {
+                document.getElementById('prefixListsSection').innerHTML =
+                    `<div class="section"><h2>📝 Prefix-Lists Configuration (${visibleCount})</h2>${html}</div>`;
+            } else {
+                document.getElementById('prefixListsSection').innerHTML = '';
+            }
+        }
+
+        function displayAsPathLists() {
+            const asPathLists = analysisData.asPathLists;
+            const applications = analysisData.applications.asPathLists;
+
+            if (Object.keys(asPathLists).length === 0) {
+                document.getElementById('asPathListsSection').innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            let visibleCount = 0;
+
+            for (const [name, data] of Object.entries(asPathLists)) {
+                const hasApplications = applications[name] && applications[name].length > 0;
+
+                if (!shouldDisplay(name, 'as-path', hasApplications)) {
+                    continue;
+                }
+
+                visibleCount++;
+                const itemId = `as-path-${name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>🔢 ip as-path access-list ${name}</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">`;
+
+                // Show where it's used
+                if (hasApplications) {
+                    html += '<div class="applied-locations">';
+                    html += '<h4>✅ WHERE THIS AS-PATH LIST IS USED:</h4><ul>';
+                    for (const app of applications[name]) {
+                        html += `<li><span class="usage-badge">${app.type}</span>${app.location}</li>`;
+                    }
+                    html += '</ul></div>';
+                } else {
+                    html += '<div class="not-used">⚠️ NOT USED</div>';
+                }
+
+                html += `<button class="show-related-btn" onclick="showRelatedConfig('as-path', '${name}')">📄 Show Complete Related Config</button>`;
+
+                // Show related items
+                if (data.relatedItems.length > 0) {
+                    html += '<div class="related-items"><h4>🔗 Used by Route-Maps:</h4>';
+                    for (const relItem of data.relatedItems) {
+                        const [itemType, itemName] = relItem.split(':');
+                        html += `<a class="related-link" onclick="scrollToItem('${itemType}', '${itemName}')">${itemName}</a>`;
+                    }
+                    html += '</div>';
+                }
+
+                html += '<div class="config-style-block">';
+
+                for (const entry of data.entries) {
+                    html += `<div class="config-style-line config-header">ip as-path access-list ${name} ${entry.action} ${entry.regex}</div>`;
+                }
+
+                html += '</div></div></div>';
+            }
+
+            if (visibleCount > 0) {
+                document.getElementById('asPathListsSection').innerHTML =
+                    `<div class="section"><h2>🛣️ AS-Path Access Lists (${visibleCount})</h2>${html}</div>`;
+            } else {
+                document.getElementById('asPathListsSection').innerHTML = '';
+            }
+        }
+
+        function displayCommunityLists() {
+            const communityLists = analysisData.communityLists;
+            const extCommunityLists = analysisData.extCommunityLists;
+            const applications = analysisData.applications.communityLists;
+            const extApplications = analysisData.applications.extCommunityLists;
+
+            if (Object.keys(communityLists).length === 0 && Object.keys(extCommunityLists).length === 0) {
+                document.getElementById('communityListsSection').innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            let visibleCount = 0;
+
+            // Display standard/expanded community lists
+            for (const [name, data] of Object.entries(communityLists)) {
+                const hasApplications = applications[name] && applications[name].length > 0;
+
+                if (!shouldDisplay(name, 'community', hasApplications)) {
+                    continue;
+                }
+
+                visibleCount++;
+                const itemId = `community-list-${name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>🏷️ ip community-list ${data.type} ${name}</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">`;
+
+                if (hasApplications) {
+                    html += '<div class="applied-locations">';
+                    html += '<h4>✅ WHERE THIS COMMUNITY LIST IS USED:</h4><ul>';
+                    for (const app of applications[name]) {
+                        html += `<li><span class="usage-badge">${app.type}</span>${app.location}</li>`;
+                    }
+                    html += '</ul></div>';
+                } else {
+                    html += '<div class="not-used">⚠️ NOT USED</div>';
+                }
+
+                html += `<button class="show-related-btn" onclick="showRelatedConfig('community-list', '${name}')">📄 Show Complete Related Config</button>`;
+
+                if (data.relatedItems.length > 0) {
+                    html += '<div class="related-items"><h4>🔗 Used by Route-Maps:</h4>';
+                    for (const relItem of data.relatedItems) {
+                        const [itemType, itemName] = relItem.split(':');
+                        html += `<a class="related-link" onclick="scrollToItem('${itemType}', '${itemName}')">${itemName}</a>`;
+                    }
+                    html += '</div>';
+                }
+
+                html += '<div class="config-style-block">';
+
+                for (const entry of data.entries) {
+                    html += `<div class="config-style-line config-header">ip community-list ${data.type} ${name} ${entry.action} ${entry.community}</div>`;
+                }
+
+                html += '</div></div></div>';
+            }
+
+            // Display extcommunity lists
+            for (const [name, data] of Object.entries(extCommunityLists)) {
+                const hasApplications = extApplications[name] && extApplications[name].length > 0;
+
+                if (!shouldDisplay(name, 'community', hasApplications)) {
+                    continue;
+                }
+
+                visibleCount++;
+                const itemId = `extcommunity-list-${name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+                html += `<div class="item" id="${itemId}">
+                    <div class="collapsible-header" onclick="toggleCollapse('${itemId}-content')">
+                        <h3>🏷️ ip extcommunity-list ${data.type} ${name}</h3>
+                        <span class="collapse-icon" id="${itemId}-content-icon">▼</span>
+                    </div>
+                    <div class="collapsible-content" id="${itemId}-content">`;
+
+                if (hasApplications) {
+                    html += '<div class="applied-locations">';
+                    html += '<h4>✅ WHERE THIS EXTCOMMUNITY LIST IS USED:</h4><ul>';
+                    for (const app of extApplications[name]) {
+                        html += `<li><span class="usage-badge">${app.type}</span>${app.location}</li>`;
+                    }
+                    html += '</ul></div>';
+                } else {
+                    html += '<div class="not-used">⚠️ NOT USED</div>';
+                }
+
+                html += `<button class="show-related-btn" onclick="showRelatedConfig('extcommunity-list', '${name}')">📄 Show Complete Related Config</button>`;
+
+                if (data.relatedItems.length > 0) {
+                    html += '<div class="related-items"><h4>🔗 Used by Route-Maps:</h4>';
+                    for (const relItem of data.relatedItems) {
+                        const [itemType, itemName] = relItem.split(':');
+                        html += `<a class="related-link" onclick="scrollToItem('${itemType}', '${itemName}')">${itemName}</a>`;
+                    }
+                    html += '</div>';
+                }
+
+                html += '<div class="config-style-block">';
+
+                for (const entry of data.entries) {
+                    html += `<div class="config-style-line config-header">ip extcommunity-list ${data.type} ${name} ${entry.action} ${entry.community}</div>`;
+                }
+
+                html += '</div></div></div>';
+            }
+
+            if (visibleCount > 0) {
+                document.getElementById('communityListsSection').innerHTML =
+                    `<div class="section"><h2>🏘️ Community Lists (${visibleCount})</h2>${html}</div>`;
+            } else {
+                document.getElementById('communityListsSection').innerHTML = '';
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('configInput').value = '';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('filterSection').style.display = 'none';
+            document.getElementById('expandCollapseControls').style.display = 'none';
+            analysisData = {};
+        }
+
+        function exportReport() {
+            let report = '='.repeat(100) + '\n';
+            report += 'CISCO ROUTE-MAP & PREFIX-LIST ANALYSIS REPORT\n';
+            report += '='.repeat(100) + '\n\n';
+            report += `Generated: ${new Date().toLocaleString()}\n\n`;
+
+            // Summary
+            report += 'SUMMARY\n' + '-'.repeat(100) + '\n';
+            report += `Route-Maps: ${Object.keys(analysisData.routeMaps).length}\n`;
+            report += `Prefix-Lists: ${Object.keys(analysisData.prefixLists).length}\n`;
+            report += `AS-Path Lists: ${Object.keys(analysisData.asPathLists).length}\n`;
+            report += `Community Lists: ${Object.keys(analysisData.communityLists).length}\n`;
+            report += `Extended Community Lists: ${Object.keys(analysisData.extCommunityLists).length}\n\n`;
+
+            // Route-Maps
+            report += '\n' + '='.repeat(100) + '\n';
+            report += 'ROUTE-MAPS CONFIGURATION\n';
+            report += '='.repeat(100) + '\n\n';
+            for (const [name, data] of Object.entries(analysisData.routeMaps)) {
+                report += `Route-Map: ${name}\n`;
+                report += '-'.repeat(100) + '\n';
+
+                if (analysisData.applications.routeMaps[name]) {
+                    report += 'WHERE USED:\n';
+                    for (const app of analysisData.applications.routeMaps[name]) {
+                        report += `  ${app.type}: ${app.location}\n`;
+                    }
+                    report += '\n';
+                }
+
+                if (data.relatedItems.length > 0) {
+                    report += 'RELATED ITEMS:\n';
+                    for (const item of data.relatedItems) {
+                        report += `  ${item}\n`;
+                    }
+                    report += '\n';
+                }
+
+                report += 'CONFIGURATION:\n';
+                for (const seq of data.sequences) {
+                    report += `route-map ${name} ${seq.action} ${seq.sequence}\n`;
+                    for (const match of seq.matches) {
+                        report += `  ${match}\n`;
+                    }
+                    for (const set of seq.sets) {
+                        report += `  ${set}\n`;
+                    }
+                    report += '!\n';
+                }
+                report += '\n';
+            }
+
+            // Prefix-Lists
+            report += '\n' + '='.repeat(100) + '\n';
+            report += 'PREFIX-LISTS CONFIGURATION\n';
+            report += '='.repeat(100) + '\n\n';
+            for (const [name, data] of Object.entries(analysisData.prefixLists)) {
+                report += `Prefix-List: ${name}\n`;
+                report += '-'.repeat(100) + '\n';
+
+                if (analysisData.applications.prefixLists[name]) {
+                    report += 'WHERE USED:\n';
+                    for (const app of analysisData.applications.prefixLists[name]) {
+                        report += `  ${app.type}: ${app.location}\n`;
+                    }
+                    report += '\n';
+                }
+
+                report += 'CONFIGURATION:\n';
+                for (const entry of data.entries) {
+                    report += `ip prefix-list ${name} seq ${entry.sequence} ${entry.action} ${entry.prefix}\n`;
+                }
+                report += '\n';
+            }
+
+            // Download the report
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `cisco-route-map-analysis-${new Date().getTime()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+
+</html>
